@@ -1,0 +1,15 @@
+﻿* b5adaa7 (HEAD -> master) [AI-Review] 补全AI记录中的提交证据
+* ddfb37f [AI-Review] 添加功能覆盖评审清单
+* 74a5d38 [Human] 记录Node环境检查和纯Java决策
+* 8b7502c [AI-Architect] 完善类关系和接口设计说明
+* b2e5ddd [Test] 记录编译和菜单烟测结果
+* 9eb2be6 [Human] 完善计划文档并忽略IDE配置
+* 80a39df [Test] 生成并验证初始JSON数据文件
+* b2347d3 [AI-Implementation] 实现控制台菜单和权限流程
+* 97d2da6 [Human] 添加安全输入辅助类
+* ee0cc3e [AI-Implementation] 实现JSON文件保存和加载
+* b9b53d0 [AI-Implementation] 添加课程要求初始数据集
+* 314958f [AI-Implementation] 实现查询排行和推荐报表
+* 64ea21c [AI-Architect] 添加服务接口和数据管理骨架
+* e4b0f42 [AI-Architect] 添加核心模型类和枚举
+* 84f17e6 [Human] 初始化项目文档和AI记录
