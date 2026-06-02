@@ -1,0 +1,79 @@
+{
+  "admins": [
+    {"id": "a001", "username": "admin", "password": "admin123", "displayName": "系统管理员"}
+  ],
+  "teams": [
+    {"id": "t001", "name": "长安星火", "memberIds": ["p001", "p002", "p003", "p004", "p005"]},
+    {"id": "t002", "name": "稷下风暴", "memberIds": ["p006", "p007", "p008", "p009", "p010"]},
+    {"id": "t003", "name": "峡谷晨光", "memberIds": ["p011", "p012", "p013", "p014", "p015"]}
+  ],
+  "equipment": [
+    {"id": "e001", "name": "破军", "type": "ATTACK", "rating": 9.8, "attributeDescription": "高额物理攻击"},
+    {"id": "e002", "name": "无尽战刃", "type": "ATTACK", "rating": 9.4, "attributeDescription": "暴击和攻击"},
+    {"id": "e003", "name": "暗影战斧", "type": "ATTACK", "rating": 8.9, "attributeDescription": "穿透和冷却"},
+    {"id": "e004", "name": "泣血之刃", "type": "ATTACK", "rating": 8.4, "attributeDescription": "吸血"},
+    {"id": "e005", "name": "宗师之力", "type": "ATTACK", "rating": 8.7, "attributeDescription": "强化普攻"},
+    {"id": "e006", "name": "博学者之怒", "type": "MAGIC", "rating": 9.7, "attributeDescription": "法术强度"},
+    {"id": "e007", "name": "回响之杖", "type": "MAGIC", "rating": 8.8, "attributeDescription": "爆发法术"},
+    {"id": "e008", "name": "虚无法杖", "type": "MAGIC", "rating": 8.9, "attributeDescription": "法术穿透"},
+    {"id": "e009", "name": "辉月", "type": "MAGIC", "rating": 8.3, "attributeDescription": "主动保护"},
+    {"id": "e010", "name": "痛苦面具", "type": "MAGIC", "rating": 8.6, "attributeDescription": "持续伤害"},
+    {"id": "e011", "name": "不祥征兆", "type": "DEFENSE", "rating": 9.1, "attributeDescription": "生命和护甲"},
+    {"id": "e012", "name": "魔女斗篷", "type": "DEFENSE", "rating": 9.0, "attributeDescription": "法术防御"},
+    {"id": "e013", "name": "霸者重装", "type": "DEFENSE", "rating": 8.5, "attributeDescription": "回复生命"},
+    {"id": "e014", "name": "反伤刺甲", "type": "DEFENSE", "rating": 8.7, "attributeDescription": "反弹伤害"},
+    {"id": "e015", "name": "抵抗之靴", "type": "MOVEMENT", "rating": 8.8, "attributeDescription": "韧性"},
+    {"id": "e016", "name": "急速战靴", "type": "MOVEMENT", "rating": 8.2, "attributeDescription": "攻速"},
+    {"id": "e017", "name": "贪婪之噬", "type": "JUNGLE", "rating": 8.6, "attributeDescription": "打野成长"},
+    {"id": "e018", "name": "巨人之握", "type": "JUNGLE", "rating": 8.3, "attributeDescription": "打野生命"},
+    {"id": "e019", "name": "近卫荣耀", "type": "SUPPORT", "rating": 8.9, "attributeDescription": "团队防御"},
+    {"id": "e020", "name": "救赎之翼", "type": "SUPPORT", "rating": 8.8, "attributeDescription": "团队护盾"}
+  ],
+  "heroes": [
+    {"id": "h001", "name": "亚瑟", "type": "WARRIOR", "attack": 82, "defense": 74, "skillPower": 58, "compatibleEquipmentIds": ["e001", "e003", "e011", "e015"]},
+    {"id": "h002", "name": "妲己", "type": "MAGE", "attack": 42, "defense": 38, "skillPower": 92, "compatibleEquipmentIds": ["e006", "e007", "e008", "e009"]},
+    {"id": "h003", "name": "后羿", "type": "MARKSMAN", "attack": 90, "defense": 36, "skillPower": 50, "compatibleEquipmentIds": ["e001", "e002", "e004", "e016"]},
+    {"id": "h004", "name": "赵云", "type": "ASSASSIN", "attack": 88, "defense": 62, "skillPower": 64, "compatibleEquipmentIds": ["e003", "e005", "e017", "e015"]},
+    {"id": "h005", "name": "庄周", "type": "SUPPORT", "attack": 48, "defense": 78, "skillPower": 70, "compatibleEquipmentIds": ["e019", "e020", "e012", "e015"]},
+    {"id": "h006", "name": "廉颇", "type": "TANK", "attack": 58, "defense": 95, "skillPower": 44, "compatibleEquipmentIds": ["e011", "e012", "e013", "e014"]},
+    {"id": "h007", "name": "孙悟空", "type": "ASSASSIN", "attack": 94, "defense": 52, "skillPower": 66, "compatibleEquipmentIds": ["e001", "e002", "e005", "e017"]},
+    {"id": "h008", "name": "王昭君", "type": "MAGE", "attack": 38, "defense": 42, "skillPower": 95, "compatibleEquipmentIds": ["e006", "e007", "e010", "e009"]},
+    {"id": "h009", "name": "鲁班七号", "type": "MARKSMAN", "attack": 96, "defense": 30, "skillPower": 48, "compatibleEquipmentIds": ["e001", "e002", "e004", "e016"]},
+    {"id": "h010", "name": "张飞", "type": "TANK", "attack": 50, "defense": 98, "skillPower": 56, "compatibleEquipmentIds": ["e011", "e012", "e019", "e020"]},
+    {"id": "h011", "name": "貂蝉", "type": "MAGE", "attack": 46, "defense": 48, "skillPower": 98, "compatibleEquipmentIds": ["e006", "e008", "e009", "e010"]},
+    {"id": "h012", "name": "吕布", "type": "WARRIOR", "attack": 92, "defense": 80, "skillPower": 62, "compatibleEquipmentIds": ["e001", "e003", "e011", "e014"]},
+    {"id": "h013", "name": "孙尚香", "type": "MARKSMAN", "attack": 93, "defense": 40, "skillPower": 58, "compatibleEquipmentIds": ["e001", "e002", "e005", "e016"]},
+    {"id": "h014", "name": "蔡文姬", "type": "SUPPORT", "attack": 34, "defense": 52, "skillPower": 88, "compatibleEquipmentIds": ["e019", "e020", "e009", "e015"]},
+    {"id": "h015", "name": "李白", "type": "ASSASSIN", "attack": 95, "defense": 44, "skillPower": 78, "compatibleEquipmentIds": ["e001", "e003", "e005", "e017"]}
+  ],
+  "players": [
+    {"id": "p001", "username": "p001", "password": "123456", "displayName": "阿离同学", "level": 31, "wins": 28, "losses": 12, "teamId": "t001", "heroIds": ["h001", "h003", "h015"]},
+    {"id": "p002", "username": "p002", "password": "123456", "displayName": "峡谷小周", "level": 27, "wins": 22, "losses": 13, "teamId": "t001", "heroIds": ["h002", "h008", "h011"]},
+    {"id": "p003", "username": "p003", "password": "123456", "displayName": "青铜到王者", "level": 35, "wins": 32, "losses": 18, "teamId": "t001", "heroIds": ["h004", "h007", "h012"]},
+    {"id": "p004", "username": "p004", "password": "123456", "displayName": "河道巡逻员", "level": 24, "wins": 18, "losses": 16, "teamId": "t001", "heroIds": ["h005", "h006", "h010"]},
+    {"id": "p005", "username": "p005", "password": "123456", "displayName": "红蓝都要", "level": 29, "wins": 26, "losses": 15, "teamId": "t001", "heroIds": ["h003", "h009", "h013"]},
+    {"id": "p006", "username": "p006", "password": "123456", "displayName": "法术核心", "level": 33, "wins": 30, "losses": 17, "teamId": "t002", "heroIds": ["h002", "h008", "h011"]},
+    {"id": "p007", "username": "p007", "password": "123456", "displayName": "野区节奏", "level": 34, "wins": 31, "losses": 14, "teamId": "t002", "heroIds": ["h004", "h007", "h015"]},
+    {"id": "p008", "username": "p008", "password": "123456", "displayName": "边路很稳", "level": 28, "wins": 21, "losses": 19, "teamId": "t002", "heroIds": ["h001", "h012", "h006"]},
+    {"id": "p009", "username": "p009", "password": "123456", "displayName": "辅助之光", "level": 25, "wins": 20, "losses": 18, "teamId": "t002", "heroIds": ["h005", "h010", "h014"]},
+    {"id": "p010", "username": "p010", "password": "123456", "displayName": "输出机器", "level": 32, "wins": 29, "losses": 16, "teamId": "t002", "heroIds": ["h003", "h009", "h013"]},
+    {"id": "p011", "username": "p011", "password": "123456", "displayName": "沉着指挥", "level": 30, "wins": 25, "losses": 15, "teamId": "t003", "heroIds": ["h001", "h010", "h014"]},
+    {"id": "p012", "username": "p012", "password": "123456", "displayName": "闪现向前", "level": 36, "wins": 35, "losses": 16, "teamId": "t003", "heroIds": ["h004", "h007", "h015"]},
+    {"id": "p013", "username": "p013", "password": "123456", "displayName": "草丛观察者", "level": 22, "wins": 15, "losses": 17, "teamId": "t003", "heroIds": ["h002", "h005", "h008"]},
+    {"id": "p014", "username": "p014", "password": "123456", "displayName": "稳定发育", "level": 26, "wins": 19, "losses": 14, "teamId": "t003", "heroIds": ["h003", "h009", "h013"]},
+    {"id": "p015", "username": "p015", "password": "123456", "displayName": "团战开关", "level": 31, "wins": 27, "losses": 13, "teamId": "t003", "heroIds": ["h006", "h010", "h012"]}
+  ],
+  "matches": [
+    {"id": "m001", "date": "2026-05-01", "teamAId": "t001", "teamBId": "t002", "winnerTeamId": "t001", "playerHeroChoices": {"p001": "h003", "p002": "h011", "p003": "h004", "p004": "h006", "p005": "h013", "p006": "h002", "p007": "h007", "p008": "h006", "p009": "h005", "p010": "h009"}},
+    {"id": "m002", "date": "2026-05-03", "teamAId": "t002", "teamBId": "t003", "winnerTeamId": "t003", "playerHeroChoices": {"p006": "h008", "p007": "h015", "p008": "h001", "p009": "h010", "p010": "h013", "p011": "h001", "p012": "h007", "p013": "h008", "p014": "h003", "p015": "h010"}},
+    {"id": "m003", "date": "2026-05-05", "teamAId": "t001", "teamBId": "t003", "winnerTeamId": "t001", "playerHeroChoices": {"p001": "h001", "p002": "h008", "p003": "h012", "p004": "h005", "p005": "h009", "p011": "h010", "p012": "h015", "p013": "h002", "p014": "h009", "p015": "h012"}},
+    {"id": "m004", "date": "2026-05-07", "teamAId": "t003", "teamBId": "t001", "winnerTeamId": "t003", "playerHeroChoices": {"p001": "h003", "p002": "h011", "p003": "h004", "p004": "h006", "p005": "h013", "p011": "h014", "p012": "h004", "p013": "h005", "p014": "h013", "p015": "h006"}},
+    {"id": "m005", "date": "2026-05-09", "teamAId": "t002", "teamBId": "t001", "winnerTeamId": "t002", "playerHeroChoices": {"p001": "h015", "p002": "h002", "p003": "h007", "p004": "h010", "p005": "h003", "p006": "h008", "p007": "h015", "p008": "h001", "p009": "h010", "p010": "h013"}},
+    {"id": "m006", "date": "2026-05-11", "teamAId": "t003", "teamBId": "t002", "winnerTeamId": "t002", "playerHeroChoices": {"p006": "h011", "p007": "h004", "p008": "h012", "p009": "h014", "p010": "h003", "p011": "h010", "p012": "h015", "p013": "h002", "p014": "h009", "p015": "h012"}},
+    {"id": "m007", "date": "2026-05-13", "teamAId": "t001", "teamBId": "t002", "winnerTeamId": "t001", "playerHeroChoices": {"p001": "h003", "p002": "h011", "p003": "h004", "p004": "h006", "p005": "h013", "p006": "h002", "p007": "h007", "p008": "h006", "p009": "h005", "p010": "h009"}},
+    {"id": "m008", "date": "2026-05-15", "teamAId": "t002", "teamBId": "t003", "winnerTeamId": "t002", "playerHeroChoices": {"p006": "h008", "p007": "h015", "p008": "h001", "p009": "h010", "p010": "h013", "p011": "h001", "p012": "h007", "p013": "h008", "p014": "h003", "p015": "h010"}},
+    {"id": "m009", "date": "2026-05-17", "teamAId": "t003", "teamBId": "t001", "winnerTeamId": "t001", "playerHeroChoices": {"p001": "h001", "p002": "h008", "p003": "h012", "p004": "h005", "p005": "h009", "p011": "h010", "p012": "h015", "p013": "h002", "p014": "h009", "p015": "h012"}},
+    {"id": "m010", "date": "2026-05-19", "teamAId": "t001", "teamBId": "t003", "winnerTeamId": "t003", "playerHeroChoices": {"p001": "h003", "p002": "h011", "p003": "h004", "p004": "h006", "p005": "h013", "p011": "h014", "p012": "h004", "p013": "h005", "p014": "h013", "p015": "h006"}}
+  ]
+
+}
