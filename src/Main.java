@@ -1,4 +1,3 @@
-import model.Admin;
 import model.Equipment;
 import model.EquipmentType;
 import model.Hero;

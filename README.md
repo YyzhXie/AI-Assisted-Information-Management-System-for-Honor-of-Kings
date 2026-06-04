@@ -13,13 +13,7 @@ javac -encoding UTF-8 -d out src/Main.java src/model/*.java src/service/*.java s
 java -cp out Main
 ```
 
-项目不依赖 Node.js、npm、Maven、Gradle 或第三方库。
-
-Node.js 环境检查记录：
-
-- `node -v`：当前环境中的 `node.exe` 无法运行，提示拒绝访问。
-- `npm -v`：未找到 npm。
-- 结论：Node.js 不作为本项目依赖，所有功能均由 Java 实现。
+项目不依赖 Maven、Gradle 或第三方库，所有功能均由 Java 实现。
 
 ## 3. 默认登录账户
 
