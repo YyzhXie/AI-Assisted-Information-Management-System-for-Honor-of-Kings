@@ -181,7 +181,7 @@ public class Main {
             case 3 -> System.out.println(rankingService.formatPlayers(rankingService.topByMatchCount(limit)));
             default -> System.out.println("未知选择。");
         }
-        System.out.println("平局处理：胜率相同按等级降序，再按ID升序。");
+        System.out.println("同位排序：除当前排序条件外，依次按等级、胜率、对战次数降序，再按ID升序。单局比赛没有平局。");
     }
 
     private void queryPlayer() {

@@ -18,6 +18,7 @@ public class RankingService {
         return manager.getPlayers().stream()
                 .sorted(Comparator.comparing(Player::getWinRate).reversed()
                         .thenComparing(Player::getLevel, Comparator.reverseOrder())
+                        .thenComparing(Player::getTotalMatches, Comparator.reverseOrder())
                         .thenComparing(Player::getId))
                 .limit(limit)
                 .toList();
@@ -27,6 +28,7 @@ public class RankingService {
         return manager.getPlayers().stream()
                 .sorted(Comparator.comparing(Player::getLevel).reversed()
                         .thenComparing(Player::getWinRate, Comparator.reverseOrder())
+                        .thenComparing(Player::getTotalMatches, Comparator.reverseOrder())
                         .thenComparing(Player::getId))
                 .limit(limit)
                 .toList();
@@ -35,6 +37,7 @@ public class RankingService {
     public List<Player> topByMatchCount(int limit) {
         return manager.getPlayers().stream()
                 .sorted(Comparator.comparing(Player::getTotalMatches).reversed()
+                        .thenComparing(Player::getLevel, Comparator.reverseOrder())
                         .thenComparing(Player::getWinRate, Comparator.reverseOrder())
                         .thenComparing(Player::getId))
                 .limit(limit)

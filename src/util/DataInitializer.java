@@ -90,21 +90,21 @@ public class DataInitializer {
     }
 
     private static void addPlayers(GameDataManager manager) {
-        addPlayer(manager, "p001", "阿离同学", 31, 28, 12, "t001", List.of("h001", "h003", "h015"));
-        addPlayer(manager, "p002", "峡谷小周", 27, 22, 13, "t001", List.of("h002", "h008", "h011"));
-        addPlayer(manager, "p003", "青铜到王者", 35, 32, 18, "t001", List.of("h004", "h007", "h012"));
-        addPlayer(manager, "p004", "河道巡逻员", 24, 18, 16, "t001", List.of("h005", "h006", "h010"));
-        addPlayer(manager, "p005", "红蓝都要", 29, 26, 15, "t001", List.of("h003", "h009", "h013"));
-        addPlayer(manager, "p006", "法术核心", 33, 30, 17, "t002", List.of("h002", "h008", "h011"));
-        addPlayer(manager, "p007", "野区节奏", 34, 31, 14, "t002", List.of("h004", "h007", "h015"));
-        addPlayer(manager, "p008", "边路很稳", 28, 21, 19, "t002", List.of("h001", "h012", "h006"));
-        addPlayer(manager, "p009", "辅助之光", 25, 20, 18, "t002", List.of("h005", "h010", "h014"));
-        addPlayer(manager, "p010", "输出机器", 32, 29, 16, "t002", List.of("h003", "h009", "h013"));
-        addPlayer(manager, "p011", "沉着指挥", 30, 25, 15, "t003", List.of("h001", "h010", "h014"));
-        addPlayer(manager, "p012", "闪现向前", 36, 35, 16, "t003", List.of("h004", "h007", "h015"));
-        addPlayer(manager, "p013", "草丛观察者", 22, 15, 17, "t003", List.of("h002", "h005", "h008"));
-        addPlayer(manager, "p014", "稳定发育", 26, 19, 14, "t003", List.of("h003", "h009", "h013"));
-        addPlayer(manager, "p015", "团战开关", 31, 27, 13, "t003", List.of("h006", "h010", "h012"));
+        addPlayer(manager, "P001", "阿离同学", 31, 28, 12, "t001", List.of("h001", "h003", "h015"));
+        addPlayer(manager, "P002", "峡谷小周", 27, 22, 13, "t001", List.of("h002", "h008", "h011"));
+        addPlayer(manager, "P003", "青铜到王者", 35, 32, 18, "t001", List.of("h004", "h007", "h012"));
+        addPlayer(manager, "P004", "河道巡逻员", 24, 18, 16, "t001", List.of("h005", "h006", "h010"));
+        addPlayer(manager, "P005", "红蓝都要", 29, 26, 15, "t001", List.of("h003", "h009", "h013"));
+        addPlayer(manager, "P006", "法术核心", 33, 30, 17, "t002", List.of("h002", "h008", "h011"));
+        addPlayer(manager, "P007", "野区节奏", 34, 31, 14, "t002", List.of("h004", "h007", "h015"));
+        addPlayer(manager, "P008", "边路很稳", 28, 21, 19, "t002", List.of("h001", "h012", "h006"));
+        addPlayer(manager, "P009", "辅助之光", 25, 20, 18, "t002", List.of("h005", "h010", "h014"));
+        addPlayer(manager, "P010", "输出机器", 32, 29, 16, "t002", List.of("h003", "h009", "h013"));
+        addPlayer(manager, "P011", "沉着指挥", 30, 25, 15, "t003", List.of("h001", "h010", "h014"));
+        addPlayer(manager, "P012", "闪现向前", 36, 35, 16, "t003", List.of("h004", "h007", "h015"));
+        addPlayer(manager, "P013", "草丛观察者", 22, 15, 17, "t003", List.of("h002", "h005", "h008"));
+        addPlayer(manager, "P014", "稳定发育", 26, 19, 14, "t003", List.of("h003", "h009", "h013"));
+        addPlayer(manager, "P015", "团战开关", 31, 27, 13, "t003", List.of("h006", "h010", "h012"));
     }
 
     private static void addPlayer(GameDataManager manager, String id, String name, int level, int wins, int losses, String teamId, List<String> heroes) {
