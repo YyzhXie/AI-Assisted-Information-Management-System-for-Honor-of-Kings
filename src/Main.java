@@ -157,7 +157,7 @@ public class Main {
                 case 2 -> queryTeam();
                 case 3 -> queryHero();
                 case 4 -> System.out.println(rankingService.formatEquipmentRanking());
-                case 5 -> showPlayerHistory(input.readRequired("玩家ID: "));
+                case 5 -> queryPlayerHistory();
                 case 6 -> showTeamHistory(input.readRequired("战队ID: "));
                 case 0 -> {
                     return;
@@ -185,16 +185,53 @@ public class Main {
     }
 
     private void queryPlayer() {
-        String keyword = input.readRequired("输入玩家ID、用户名或昵称关键字: ");
-        List<Player> players = searchService.search(keyword);
-        if (players.isEmpty()) {
-            System.out.println("未找到玩家。");
-            return;
-        }
-        for (Player player : players) {
+        Player player = selectPublicPlayer("输入玩家ID、用户名或昵称关键字: ");
+        if (player != null) {
             System.out.println(searchService.playerDetails(player));
             System.out.println();
         }
+    }
+
+    private void queryPlayerHistory() {
+        Player player = selectPublicPlayer("输入玩家ID、用户名或昵称关键字: ");
+        if (player != null) {
+            showPlayerHistory(player.getId());
+        }
+    }
+
+    private Player selectPublicPlayer(String prompt) {
+        String keyword = input.readRequired(prompt);
+        List<Player> exactPlayers = searchService.searchExactPlayers(keyword);
+        if (exactPlayers.size() == 1) {
+            return exactPlayers.get(0);
+        }
+
+        List<Player> players = exactPlayers.isEmpty() ? searchService.search(keyword) : exactPlayers;
+        if (players.isEmpty()) {
+            System.out.println("未找到玩家。");
+            return null;
+        }
+
+        System.out.println("找到以下候选玩家，请选择：");
+        for (int i = 0; i < players.size(); i++) {
+            Player player = players.get(i);
+            System.out.printf("%d. %s%n", i + 1, playerCandidateLine(player));
+        }
+        System.out.println("0. 取消");
+
+        int choice = input.readInt("请选择候选玩家: ", 0, players.size());
+        if (choice == 0) {
+            System.out.println("已取消选择。");
+            return null;
+        }
+        return players.get(choice - 1);
+    }
+
+    private String playerCandidateLine(Player player) {
+        String teamName = manager.findTeamById(player.getTeamId()).map(Team::getName).orElse("暂无战队");
+        return String.format("%s(%s) 用户名:%s 战队:%s 等级:%d 胜率:%.2f%%",
+                player.getDisplayName(), player.getId(), player.getUsername(), teamName,
+                player.getLevel(), player.getWinRate());
     }
 
     private void queryTeam() {

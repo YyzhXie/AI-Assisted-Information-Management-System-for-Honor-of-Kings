@@ -23,10 +23,23 @@ public class SearchService implements Searchable<Player> {
     @Override
     public List<Player> search(String keyword) {
         String lower = keyword.toLowerCase(Locale.ROOT);
+        if (isSuperAccountKeyword(lower)) {
+            return List.of();
+        }
         return manager.getPlayers().stream()
-                .filter(player -> player.getId().equalsIgnoreCase(keyword)
-                        || player.getDisplayName().toLowerCase(Locale.ROOT).contains(lower)
-                        || player.getUsername().equalsIgnoreCase(keyword))
+                .filter(player -> matchesPlayerKeyword(player, lower))
+                .toList();
+    }
+
+    public List<Player> searchExactPlayers(String keyword) {
+        String lower = keyword.toLowerCase(Locale.ROOT);
+        if (isSuperAccountKeyword(lower)) {
+            return List.of();
+        }
+        return manager.getPlayers().stream()
+                .filter(player -> equalsIgnoreCase(player.getId(), lower)
+                        || equalsIgnoreCase(player.getUsername(), lower)
+                        || equalsIgnoreCase(player.getDisplayName(), lower))
                 .toList();
     }
 
@@ -172,5 +185,26 @@ public class SearchService implements Searchable<Player> {
 
     private String teamName(String teamId) {
         return manager.findTeamById(teamId).map(Team::getName).orElse(teamId);
+    }
+
+    private boolean matchesPlayerKeyword(Player player, String lower) {
+        return containsIgnoreCase(player.getId(), lower)
+                || containsIgnoreCase(player.getUsername(), lower)
+                || containsIgnoreCase(player.getDisplayName(), lower);
+    }
+
+    private boolean isSuperAccountKeyword(String lower) {
+        return manager.getAdmins().stream()
+                .anyMatch(admin -> equalsIgnoreCase(admin.getId(), lower)
+                        || equalsIgnoreCase(admin.getUsername(), lower)
+                        || equalsIgnoreCase(admin.getDisplayName(), lower));
+    }
+
+    private boolean containsIgnoreCase(String value, String lower) {
+        return value != null && value.toLowerCase(Locale.ROOT).contains(lower);
+    }
+
+    private boolean equalsIgnoreCase(String value, String lower) {
+        return value != null && value.toLowerCase(Locale.ROOT).equals(lower);
     }
 }
