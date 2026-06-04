@@ -1,4 +1,8 @@
-﻿* b5adaa7 (HEAD -> master) [AI-Review] 补全AI记录中的提交证据
+﻿* af3875b (HEAD -> main) [Docs] 补充登录稳定性AI提交证据
+* f59d1d5 [AI-Review] 评测连续登录稳定性
+* c9941b9 (origin/main) 	modified:   README.md 	modified:   src/Main.java
+* e8eca07 [Docs] 导出Git历史证据
+* b5adaa7 [AI-Review] 补全AI记录中的提交证据
 * ddfb37f [AI-Review] 添加功能覆盖评审清单
 * 74a5d38 [Human] 记录Node环境检查和纯Java决策
 * 8b7502c [AI-Architect] 完善类关系和接口设计说明
