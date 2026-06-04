@@ -1,4 +1,7 @@
-﻿* 3e4b6f3 (HEAD -> main) [Docs] 补充鲁棒性评测AI提交证据
+﻿* 26fa90f (HEAD -> main) [Docs] 补充输出准确性AI提交证据
+* d65fd6d [AI-Review] 逐项评测数据集输出准确性
+* 7a56bc9 [Docs] 更新鲁棒性评测后的Git历史
+* 3e4b6f3 [Docs] 补充鲁棒性评测AI提交证据
 * f12d4fc [AI-Review] 加固输入容错和外部运营更新
 * 5f24d88 [Docs] 更新登录稳定性后的Git历史
 * af3875b [Docs] 补充登录稳定性AI提交证据
