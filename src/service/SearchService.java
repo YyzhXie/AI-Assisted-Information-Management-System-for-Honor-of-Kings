@@ -140,7 +140,8 @@ public class SearchService implements Searchable<Player> {
         return manager.matchesForTeam(teamId).stream()
                 .limit(limit)
                 .map(match -> String.format("日期: %s | 对手: %s | 结果: %s | 记录ID: %s",
-                        match.getDate(), teamName(match.opponentOf(teamId)), match.resultForTeam(teamId), match.getId()))
+                        match.getDate(), teamName(match.opponentOf(teamId)),
+                        match.getWinnerTeamId().equals(teamId) ? "胜利" : "失败", match.getId()))
                 .collect(Collectors.joining("\n"));
     }
 

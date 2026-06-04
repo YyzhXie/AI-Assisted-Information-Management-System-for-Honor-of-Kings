@@ -57,7 +57,7 @@ java -cp out Main
 
 ## 7. 测试摘要
 
-测试文档位于 `docs/test-cases.md`，包含登录、查询、排行榜、数据管理、JSON 持久化、非法输入和连续登录稳定性等场景。连续登录专项报告位于 `docs/login-stability-report.md`，交互鲁棒性报告位于 `docs/robustness-report.md`，长期运营外部更新说明位于 `docs/operations-update-guide.md`。
+测试文档位于 `docs/test-cases.md`，包含登录、查询、排行榜、数据管理、JSON 持久化、非法输入和连续登录稳定性等场景。连续登录专项报告位于 `docs/login-stability-report.md`，交互鲁棒性报告位于 `docs/robustness-report.md`，长期运营外部更新说明位于 `docs/operations-update-guide.md`，输出准确性评测位于 `docs/output-accuracy-report.md`。
 
 ## 8. 已知限制
 
