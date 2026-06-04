@@ -20,6 +20,7 @@ public class DataInitializer {
     public static GameDataManager createDefaultData() {
         GameDataManager manager = new GameDataManager();
         manager.addAdmin(new Admin("a001", "admin", "admin123", "系统管理员"));
+        manager.addAdmin(new Admin("a002", "coach", "coach123", "战术教练"));
         addEquipment(manager);
         addHeroes(manager);
         addTeams(manager);

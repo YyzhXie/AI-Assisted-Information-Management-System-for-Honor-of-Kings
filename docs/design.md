@@ -34,3 +34,7 @@
 ## JSON 持久化
 
 `FileStorageService` 保存固定结构 JSON：players、admins、heroes、equipment、teams、matches。加载时只解析本项目生成的格式，不作为通用 JSON 解析器。
+
+## 登录状态设计
+
+`AuthenticationService` 使用单个 `Person currentUser` 保存当前登录用户。每次成功登录都会覆盖该字段，登出时调用 `logout()` 将其置空。连续登录稳定性测试覆盖了玩家到玩家、管理员到管理员、管理员到玩家、玩家到管理员和失败登录场景，确认不会复用上一个用户的菜单权限。

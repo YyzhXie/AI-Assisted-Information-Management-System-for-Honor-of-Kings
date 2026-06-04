@@ -1,6 +1,7 @@
 {
   "admins": [
-    {"id": "a001", "username": "admin", "password": "admin123", "displayName": "系统管理员"}
+    {"id": "a001", "username": "admin", "password": "admin123", "displayName": "系统管理员"},
+    {"id": "a002", "username": "coach", "password": "coach123", "displayName": "战术教练"}
   ],
   "teams": [
     {"id": "t001", "name": "长安星火", "memberIds": ["p001", "p002", "p003", "p004", "p005"]},
