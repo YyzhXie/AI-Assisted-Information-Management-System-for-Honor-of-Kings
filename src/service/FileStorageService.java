@@ -33,12 +33,16 @@ public class FileStorageService implements Persistable {
 
     @Override
     public GameDataManager load(String filePath) throws IOException {
-        String json = Files.readString(Path.of(filePath), StandardCharsets.UTF_8);
-        Object parsed = new JsonParser(json).parse();
-        if (!(parsed instanceof Map<?, ?> root)) {
-            throw new IOException("数据文件格式错误。");
+        try {
+            String json = Files.readString(Path.of(filePath), StandardCharsets.UTF_8);
+            Object parsed = new JsonParser(json).parse();
+            if (!(parsed instanceof Map<?, ?> root)) {
+                throw new IOException("数据文件格式错误。");
+            }
+            return fromJson(root);
+        } catch (RuntimeException ex) {
+            throw new IOException("数据文件内容无法解析: " + ex.getMessage(), ex);
         }
-        return fromJson(root);
     }
 
     private String toJson(GameDataManager manager) {

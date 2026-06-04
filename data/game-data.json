@@ -6,7 +6,8 @@
   "teams": [
     {"id": "t001", "name": "长安星火", "memberIds": ["p001", "p002", "p003", "p004", "p005"]},
     {"id": "t002", "name": "稷下风暴", "memberIds": ["p006", "p007", "p008", "p009", "p010"]},
-    {"id": "t003", "name": "峡谷晨光", "memberIds": ["p011", "p012", "p013", "p014", "p015"]}
+    {"id": "t003", "name": "峡谷晨光", "memberIds": ["p011", "p012", "p013", "p014", "p015"]},
+    {"id": "t004", "name": "云梦试训队", "memberIds": []}
   ],
   "equipment": [
     {"id": "e001", "name": "破军", "type": "ATTACK", "rating": 9.8, "attributeDescription": "高额物理攻击"},
@@ -28,12 +29,13 @@
     {"id": "e017", "name": "贪婪之噬", "type": "JUNGLE", "rating": 8.6, "attributeDescription": "打野成长"},
     {"id": "e018", "name": "巨人之握", "type": "JUNGLE", "rating": 8.3, "attributeDescription": "打野生命"},
     {"id": "e019", "name": "近卫荣耀", "type": "SUPPORT", "rating": 8.9, "attributeDescription": "团队防御"},
-    {"id": "e020", "name": "救赎之翼", "type": "SUPPORT", "rating": 8.8, "attributeDescription": "团队护盾"}
+    {"id": "e020", "name": "救赎之翼", "type": "SUPPORT", "rating": 8.8, "attributeDescription": "团队护盾"},
+    {"id": "e021", "name": "日渊", "type": "ATTACK", "rating": 9.2, "attributeDescription": "运营更新装备：远程输出强化"}
   ],
   "heroes": [
     {"id": "h001", "name": "亚瑟", "type": "WARRIOR", "attack": 82, "defense": 74, "skillPower": 58, "compatibleEquipmentIds": ["e001", "e003", "e011", "e015"]},
     {"id": "h002", "name": "妲己", "type": "MAGE", "attack": 42, "defense": 38, "skillPower": 92, "compatibleEquipmentIds": ["e006", "e007", "e008", "e009"]},
-    {"id": "h003", "name": "后羿", "type": "MARKSMAN", "attack": 90, "defense": 36, "skillPower": 50, "compatibleEquipmentIds": ["e001", "e002", "e004", "e016"]},
+    {"id": "h003", "name": "后羿", "type": "MARKSMAN", "attack": 90, "defense": 36, "skillPower": 50, "compatibleEquipmentIds": ["e001", "e002", "e004", "e016", "e021"]},
     {"id": "h004", "name": "赵云", "type": "ASSASSIN", "attack": 88, "defense": 62, "skillPower": 64, "compatibleEquipmentIds": ["e003", "e005", "e017", "e015"]},
     {"id": "h005", "name": "庄周", "type": "SUPPORT", "attack": 48, "defense": 78, "skillPower": 70, "compatibleEquipmentIds": ["e019", "e020", "e012", "e015"]},
     {"id": "h006", "name": "廉颇", "type": "TANK", "attack": 58, "defense": 95, "skillPower": 44, "compatibleEquipmentIds": ["e011", "e012", "e013", "e014"]},

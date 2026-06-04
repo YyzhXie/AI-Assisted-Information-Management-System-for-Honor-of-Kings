@@ -35,6 +35,12 @@
 
 `FileStorageService` 保存固定结构 JSON：players、admins、heroes、equipment、teams、matches。加载时只解析本项目生成的格式，不作为通用 JSON 解析器。
 
+程序启动时优先加载 `data/game-data.json`。这使外部追加战队、装备等运营数据成为可行方案；如果加载失败，程序回退到 `DataInitializer` 的内置数据，避免启动阶段崩溃。
+
 ## 登录状态设计
 
 `AuthenticationService` 使用单个 `Person currentUser` 保存当前登录用户。每次成功登录都会覆盖该字段，登出时调用 `logout()` 将其置空。连续登录稳定性测试覆盖了玩家到玩家、管理员到管理员、管理员到玩家、玩家到管理员和失败登录场景，确认不会复用上一个用户的菜单权限。
+
+## 输入容错设计
+
+`InputHelper` 统一处理控制台输入。整数、小数和日期都有循环校验；必填文本为空时会提示重新输入；英雄类型和装备类型通过枚举解析并在错误时重试。管理员新增对战记录时，错误日期不会再导致程序退出。

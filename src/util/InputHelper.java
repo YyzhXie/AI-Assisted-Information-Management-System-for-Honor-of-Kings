@@ -1,5 +1,7 @@
 package util;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class InputHelper {
@@ -54,6 +56,18 @@ public class InputHelper {
                 System.out.println("请输入 " + min + " 到 " + max + " 之间的数字。");
             } catch (NumberFormatException ex) {
                 System.out.println("请输入有效数字。");
+            }
+        }
+    }
+
+    public LocalDate readDate(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String raw = scanner.nextLine().trim();
+            try {
+                return LocalDate.parse(raw);
+            } catch (DateTimeParseException ex) {
+                System.out.println("日期格式无效，请使用 yyyy-MM-dd，例如 2026-06-04。");
             }
         }
     }

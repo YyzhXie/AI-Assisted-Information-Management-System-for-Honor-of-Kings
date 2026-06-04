@@ -17,7 +17,6 @@ import util.DataInitializer;
 import util.InputHelper;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
@@ -35,7 +34,7 @@ public class Main {
     public Main() {
         Scanner scanner = new Scanner(System.in);
         this.input = new InputHelper(scanner);
-        this.manager = DataInitializer.createDefaultData();
+        this.manager = loadStartupData();
         rebuildServices();
     }
 
@@ -449,7 +448,7 @@ public class Main {
 
     private void addMatch() {
         MatchRecord match = new MatchRecord(input.readRequired("对战ID: "),
-                LocalDate.parse(input.readRequired("日期(yyyy-MM-dd): ")),
+                input.readDate("日期(yyyy-MM-dd): "),
                 input.readRequired("队伍A ID: "), input.readRequired("队伍B ID: "),
                 input.readRequired("胜者战队ID: "));
         fillAutoHeroChoices(match);
@@ -464,7 +463,7 @@ public class Main {
             System.out.println("对战记录不存在。");
             return;
         }
-        match.setDate(LocalDate.parse(input.readRequired("日期(yyyy-MM-dd): ")));
+        match.setDate(input.readDate("日期(yyyy-MM-dd): "));
         match.setTeamAId(input.readRequired("队伍A ID: "));
         match.setTeamBId(input.readRequired("队伍B ID: "));
         match.setWinnerTeamId(input.readRequired("胜者战队ID: "));
@@ -540,6 +539,17 @@ public class Main {
             System.out.println("数据已从 " + DATA_FILE + " 加载。");
         } catch (IOException ex) {
             System.out.println("加载失败: " + ex.getMessage());
+        }
+    }
+
+    private GameDataManager loadStartupData() {
+        try {
+            GameDataManager loaded = storageService.load(DATA_FILE);
+            System.out.println("已自动加载数据文件 " + DATA_FILE);
+            return loaded;
+        } catch (IOException ex) {
+            System.out.println("未能自动加载 " + DATA_FILE + "，使用内置初始数据。原因: " + ex.getMessage());
+            return DataInitializer.createDefaultData();
         }
     }
 

@@ -15,6 +15,8 @@ java -cp out Main
 
 项目不依赖 Maven、Gradle 或第三方库，所有功能均由 Java 实现。
 
+程序启动时会优先自动加载 `data/game-data.json`。如果该文件不存在或格式错误，系统会回退到内置初始数据。
+
 ## 3. 默认登录账户
 
 - 管理员：`admin` / `admin123`
@@ -37,6 +39,7 @@ java -cp out Main
 - 管理员添加、编辑、删除玩家、英雄、装备、战队和对战记录
 - 玩家编辑自己的昵称
 - JSON 保存和加载数据
+- 启动时自动加载外部 JSON 数据，支持长期运营式追加战队和装备
 
 ## 5. 使用的 Java 概念
 
@@ -54,7 +57,7 @@ java -cp out Main
 
 ## 7. 测试摘要
 
-测试文档位于 `docs/test-cases.md`，包含登录、查询、排行榜、数据管理、JSON 持久化、非法输入和连续登录稳定性等场景。连续登录专项报告位于 `docs/login-stability-report.md`。
+测试文档位于 `docs/test-cases.md`，包含登录、查询、排行榜、数据管理、JSON 持久化、非法输入和连续登录稳定性等场景。连续登录专项报告位于 `docs/login-stability-report.md`，交互鲁棒性报告位于 `docs/robustness-report.md`，长期运营外部更新说明位于 `docs/operations-update-guide.md`。
 
 ## 8. 已知限制
 
