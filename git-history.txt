@@ -1,4 +1,7 @@
-﻿* 26fa90f (HEAD -> main) [Docs] 补充输出准确性AI提交证据
+﻿* c15b1b7 (HEAD -> main) [Docs] 补充排行榜规则调整AI证据
+* 5e661ac [AI-Refactor] 调整排行榜规则和玩家ID规范
+* da092cf (origin/main) [Docs] 更新输出准确性评测后的Git历史
+* 26fa90f [Docs] 补充输出准确性AI提交证据
 * d65fd6d [AI-Review] 逐项评测数据集输出准确性
 * 7a56bc9 [Docs] 更新鲁棒性评测后的Git历史
 * 3e4b6f3 [Docs] 补充鲁棒性评测AI提交证据
@@ -6,7 +9,7 @@
 * 5f24d88 [Docs] 更新登录稳定性后的Git历史
 * af3875b [Docs] 补充登录稳定性AI提交证据
 * f59d1d5 [AI-Review] 评测连续登录稳定性
-* c9941b9 (origin/main) 	modified:   README.md 	modified:   src/Main.java
+* c9941b9 	modified:   README.md 	modified:   src/Main.java
 * e8eca07 [Docs] 导出Git历史证据
 * b5adaa7 [AI-Review] 补全AI记录中的提交证据
 * ddfb37f [AI-Review] 添加功能覆盖评审清单
