@@ -30,11 +30,11 @@ public class DerivedDataConsistencyTest {
     private static void testAddAndDeleteTemporaryPlayer() {
         GameDataManager manager = loadData();
         SearchService searchService = searchService(manager);
-        Team team = manager.findTeamById("t001").orElseThrow();
+        Team team = manager.findTeamById("T001").orElseThrow();
         TeamStats before = stats(manager, team);
 
         Player player = new Player("P880", "P880", "123456", "派生测试玩家", 99, 30, 0, team.getId());
-        player.addHero("h003");
+        player.addHero("H003");
         manager.addPlayer(player);
 
         TeamStats afterAdd = stats(manager, team);
@@ -64,7 +64,7 @@ public class DerivedDataConsistencyTest {
     private static void testDeleteExistingPlayerFromTeamCopy() {
         GameDataManager manager = loadData();
         SearchService searchService = searchService(manager);
-        Team team = manager.findTeamById("t001").orElseThrow();
+        Team team = manager.findTeamById("T001").orElseThrow();
         TeamStats before = stats(manager, team);
         String targetId = team.getMemberIds().stream()
                 .filter(id -> manager.findPlayerById(id).isPresent())
@@ -84,8 +84,8 @@ public class DerivedDataConsistencyTest {
     private static void testAddAndDeleteHeroOwnership() {
         GameDataManager manager = loadData();
         SearchService searchService = searchService(manager);
-        Hero hero = new Hero("h900", "测试射手", HeroType.MARKSMAN, 90, 30, 60);
-        hero.addCompatibleEquipment("e001");
+        Hero hero = new Hero("H900", "测试射手", HeroType.MARKSMAN, 90, 30, 60);
+        hero.addCompatibleEquipment("E001");
         manager.addHero(hero);
         Player first = manager.findPlayerById("P001").orElseThrow();
         Player second = manager.findPlayerById("P002").orElseThrow();
@@ -108,25 +108,25 @@ public class DerivedDataConsistencyTest {
         SearchService searchService = searchService(manager);
         RecommendationEngine recommendationEngine = new RecommendationEngine(manager);
         RankingService rankingService = new RankingService(manager);
-        Hero hero = manager.findHeroById("h003").orElseThrow();
-        Equipment equipment = new Equipment("e900", "测试破晓", EquipmentType.ATTACK, 999.0, "测试用高评分攻击装");
+        Hero hero = manager.findHeroById("H003").orElseThrow();
+        Equipment equipment = new Equipment("E900", "测试破晓", EquipmentType.ATTACK, 999.0, "测试用高评分攻击装");
         manager.addEquipment(equipment);
         hero.addCompatibleEquipment(equipment.getId());
 
         List<Equipment> recommended = recommendationEngine.recommendForHero(hero, 3);
-        assertEquals("e900", recommended.get(0).getId(), "新增高评分同类型装备后推荐第一名");
+        assertEquals("E900", recommended.get(0).getId(), "新增高评分同类型装备后推荐第一名");
         assertTextContains(searchService.heroDetails(hero), "推荐装备: 测试破晓", "英雄详情推荐装备同步");
         RankingService.EquipmentScore score = rankingService.equipmentRanking().stream()
-                .filter(item -> item.equipment().getId().equals("e900"))
+                .filter(item -> item.equipment().getId().equals("E900"))
                 .findFirst()
                 .orElseThrow();
         assertEquals(1, score.compatibleHeroCount(), "新增装备后适配英雄数量");
         assertTrue(score.score() > 0.0 && score.score() <= 100.0, "新增装备后综合实力分数在0到100之间");
 
-        assertTrue(manager.deleteEquipment("e900"), "删除临时装备成功");
-        assertTrue(manager.findEquipmentById("e900").isEmpty(), "删除装备后无法按ID找到");
-        assertFalse(hero.getCompatibleEquipmentIds().contains("e900"), "删除装备后英雄兼容装备清理");
-        assertFalse(recommendationEngine.recommendForHero(hero, 10).stream().anyMatch(item -> item.getId().equals("e900")), "删除装备后推荐列表清理");
+        assertTrue(manager.deleteEquipment("E900"), "删除临时装备成功");
+        assertTrue(manager.findEquipmentById("E900").isEmpty(), "删除装备后无法按ID找到");
+        assertFalse(hero.getCompatibleEquipmentIds().contains("E900"), "删除装备后英雄兼容装备清理");
+        assertFalse(recommendationEngine.recommendForHero(hero, 10).stream().anyMatch(item -> item.getId().equals("E900")), "删除装备后推荐列表清理");
         assertTextNotContains(searchService.heroDetails(hero), "测试破晓", "删除装备后英雄详情不再显示该装备");
     }
 
@@ -134,20 +134,20 @@ public class DerivedDataConsistencyTest {
         GameDataManager manager = loadData();
         RankingService rankingService = new RankingService(manager);
         List<Hero> heroes = manager.getHeroes().stream().limit(2).toList();
-        Equipment equipment = new Equipment("e901", "测试法杖", EquipmentType.MAGIC, 100.0, "测试用多英雄装备");
+        Equipment equipment = new Equipment("E901", "测试法杖", EquipmentType.MAGIC, 100.0, "测试用多英雄装备");
         manager.addEquipment(equipment);
         heroes.forEach(hero -> hero.addCompatibleEquipment(equipment.getId()));
 
         RankingService.EquipmentScore score = rankingService.equipmentRanking().stream()
-                .filter(item -> item.equipment().getId().equals("e901"))
+                .filter(item -> item.equipment().getId().equals("E901"))
                 .findFirst()
                 .orElseThrow();
         assertEquals(2, score.compatibleHeroCount(), "多英雄兼容装备适配英雄数量");
         assertTrue(score.score() > 0.0 && score.score() <= 100.0, "多英雄兼容装备综合实力分数在0到100之间");
 
-        assertTrue(manager.deleteEquipment("e901"), "删除多英雄兼容装备成功");
+        assertTrue(manager.deleteEquipment("E901"), "删除多英雄兼容装备成功");
         for (Hero hero : heroes) {
-            assertFalse(hero.getCompatibleEquipmentIds().contains("e901"), "删除装备后所有英雄兼容列表清理");
+            assertFalse(hero.getCompatibleEquipmentIds().contains("E901"), "删除装备后所有英雄兼容列表清理");
         }
     }
 

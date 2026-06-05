@@ -15,8 +15,8 @@ public class ChineseSearchCandidateTest {
         GameDataManager manager = loadData();
         SearchService searchService = new SearchService(manager, new RecommendationEngine(manager));
 
-        Player newPlayer = new Player("P881", "P881", "123456", "阿离新星", 20, 3, 1, "t004");
-        newPlayer.addHero("h003");
+        Player newPlayer = new Player("P881", "P881", "123456", "阿离新星", 20, 3, 1, "T004");
+        newPlayer.addHero("H003");
         manager.addPlayer(newPlayer);
 
         List<Player> candidates = searchService.search("阿离");

@@ -24,8 +24,9 @@ public class GameDataManager {
 
     public void addPlayer(Player player) {
         requireNewId(players, player.getId(), "玩家");
+        validatePlayerReferences(player);
         players.put(player.getId(), player);
-        Team team = teams.get(player.getTeamId());
+        Team team = findTeamById(player.getTeamId()).orElse(null);
         if (team != null) {
             team.addMember(player.getId());
         }
@@ -45,6 +46,7 @@ public class GameDataManager {
 
     public void addHero(Hero hero) {
         requireNewId(heroes, hero.getId(), "英雄");
+        validateHeroReferences(hero);
         heroes.put(hero.getId(), hero);
     }
 
@@ -60,65 +62,72 @@ public class GameDataManager {
 
     public void addMatch(MatchRecord match) {
         requireNewId(matches, match.getId(), "对战记录");
+        validateMatchReferences(match);
         matches.put(match.getId(), match);
     }
 
     public void replacePlayer(Player player) {
-        if (!players.containsKey(player.getId())) {
+        String key = keyOf(players, player.getId()).orElse(player.getId());
+        if (!players.containsKey(key)) {
             throw new IllegalArgumentException("玩家不存在: " + player.getId());
         }
+        validatePlayerReferences(player);
         removePlayerFromTeams(player.getId());
-        players.put(player.getId(), player);
-        Team team = teams.get(player.getTeamId());
+        players.put(key, player);
+        Team team = findTeamById(player.getTeamId()).orElse(null);
         if (team != null) {
             team.addMember(player.getId());
         }
     }
 
     public boolean deletePlayer(String playerId) {
-        Player removed = players.remove(playerId);
+        String key = keyOf(players, playerId).orElse(playerId);
+        Player removed = players.remove(key);
         if (removed == null) {
             return false;
         }
-        removePlayerFromTeams(playerId);
+        removePlayerFromTeams(removed.getId());
         return true;
     }
 
     public boolean deleteAdmin(String adminId) {
-        return admins.remove(adminId) != null;
+        return keyOf(admins, adminId).map(admins::remove).isPresent();
     }
 
     public boolean deleteHero(String heroId) {
-        Hero removed = heroes.remove(heroId);
+        String key = keyOf(heroes, heroId).orElse(heroId);
+        Hero removed = heroes.remove(key);
         if (removed == null) {
             return false;
         }
         for (Player player : players.values()) {
-            player.removeHero(heroId);
+            player.removeHero(removed.getId());
         }
         return true;
     }
 
     public boolean deleteEquipment(String equipmentId) {
-        Equipment removed = equipment.remove(equipmentId);
+        String key = keyOf(equipment, equipmentId).orElse(equipmentId);
+        Equipment removed = equipment.remove(key);
         if (removed == null) {
             return false;
         }
         for (Hero hero : heroes.values()) {
             List<String> kept = new ArrayList<>(hero.getCompatibleEquipmentIds());
-            kept.remove(equipmentId);
+            kept.remove(removed.getId());
             hero.replaceCompatibleEquipmentIds(kept);
         }
         return true;
     }
 
     public boolean deleteTeam(String teamId) {
-        Team removed = teams.remove(teamId);
+        String key = keyOf(teams, teamId).orElse(teamId);
+        Team removed = teams.remove(key);
         if (removed == null) {
             return false;
         }
         for (Player player : players.values()) {
-            if (teamId.equals(player.getTeamId())) {
+            if (removed.getId().equalsIgnoreCase(player.getTeamId())) {
                 player.setTeamId("");
             }
         }
@@ -126,15 +135,15 @@ public class GameDataManager {
     }
 
     public boolean deleteMatch(String matchId) {
-        return matches.remove(matchId) != null;
+        return keyOf(matches, matchId).map(matches::remove).isPresent();
     }
 
     public Optional<Player> findPlayerById(String id) {
-        return Optional.ofNullable(players.get(id));
+        return findById(players, id);
     }
 
     public Optional<Admin> findAdminById(String id) {
-        return Optional.ofNullable(admins.get(id));
+        return findById(admins, id);
     }
 
     public Optional<Player> findPlayerByUsername(String username) {
@@ -150,15 +159,15 @@ public class GameDataManager {
     }
 
     public Optional<Hero> findHeroById(String id) {
-        return Optional.ofNullable(heroes.get(id));
+        return findById(heroes, id);
     }
 
     public Optional<Team> findTeamById(String id) {
-        return Optional.ofNullable(teams.get(id));
+        return findById(teams, id);
     }
 
     public Optional<Equipment> findEquipmentById(String id) {
-        return Optional.ofNullable(equipment.get(id));
+        return findById(equipment, id);
     }
 
     public Collection<Player> getPlayers() {
@@ -186,27 +195,79 @@ public class GameDataManager {
     }
 
     public List<MatchRecord> matchesForPlayer(String playerId) {
+        String resolvedPlayerId = findPlayerById(playerId).map(Player::getId).orElse(playerId);
         return matches.values().stream()
-                .filter(match -> match.involvesPlayer(playerId))
+                .filter(match -> match.involvesPlayer(resolvedPlayerId))
                 .sorted((a, b) -> b.getDate().compareTo(a.getDate()))
                 .toList();
     }
 
     public List<MatchRecord> matchesForTeam(String teamId) {
+        String resolvedTeamId = findTeamById(teamId).map(Team::getId).orElse(teamId);
         return matches.values().stream()
-                .filter(match -> match.involvesTeam(teamId))
+                .filter(match -> match.involvesTeam(resolvedTeamId))
                 .sorted((a, b) -> b.getDate().compareTo(a.getDate()))
                 .toList();
     }
 
     public int equipmentUsageCount(String equipmentId) {
+        String resolvedEquipmentId = findEquipmentById(equipmentId).map(Equipment::getId).orElse(equipmentId);
         int count = 0;
         for (Hero hero : heroes.values()) {
-            if (hero.getCompatibleEquipmentIds().contains(equipmentId)) {
+            if (hero.getCompatibleEquipmentIds().contains(resolvedEquipmentId)) {
                 count++;
             }
         }
         return count;
+    }
+
+    public void validateHeroReferences(Hero hero) {
+        List<String> missingEquipmentIds = hero.getCompatibleEquipmentIds().stream()
+                .filter(equipmentId -> findEquipmentById(equipmentId).isEmpty())
+                .toList();
+        if (!missingEquipmentIds.isEmpty()) {
+            throw new IllegalArgumentException("装备ID不存在: " + String.join(", ", missingEquipmentIds));
+        }
+    }
+
+    public void validateTeamMemberReferences(Team team) {
+        List<String> missingPlayerIds = team.getMemberIds().stream()
+                .filter(playerId -> findPlayerById(playerId).isEmpty())
+                .toList();
+        if (!missingPlayerIds.isEmpty()) {
+            throw new IllegalArgumentException("成员ID不存在: " + String.join(", ", missingPlayerIds));
+        }
+    }
+
+    public void validateMatchReferences(MatchRecord match) {
+        List<String> errors = new ArrayList<>();
+        if (findTeamById(match.getTeamAId()).isEmpty()) {
+            errors.add("队伍A不存在: " + match.getTeamAId());
+        }
+        if (findTeamById(match.getTeamBId()).isEmpty()) {
+            errors.add("队伍B不存在: " + match.getTeamBId());
+        }
+        if (findTeamById(match.getWinnerTeamId()).isEmpty()) {
+            errors.add("胜者战队不存在: " + match.getWinnerTeamId());
+        } else if (!match.getWinnerTeamId().equals(match.getTeamAId()) && !match.getWinnerTeamId().equals(match.getTeamBId())) {
+            errors.add("胜者战队必须是队伍A或队伍B");
+        }
+        List<String> missingPlayerIds = match.getPlayerHeroChoices().keySet().stream()
+                .filter(playerId -> findPlayerById(playerId).isEmpty())
+                .toList();
+        if (!missingPlayerIds.isEmpty()) {
+            errors.add("玩家ID不存在: " + String.join(", ", missingPlayerIds));
+        }
+        List<String> missingHeroIds = match.getPlayerHeroChoices().values().stream()
+                .filter(heroId -> findHeroById(heroId).isEmpty())
+                .distinct()
+                .toList();
+        if (!missingHeroIds.isEmpty()) {
+            errors.add("英雄ID不存在: " + String.join(", ", missingHeroIds));
+        }
+        if (!errors.isEmpty()) {
+            throw new IllegalArgumentException(String.join("；", errors));
+        }
     }
 
     private void removePlayerFromTeams(String playerId) {
@@ -215,9 +276,43 @@ public class GameDataManager {
         }
     }
 
+    private void validatePlayerReferences(Player player) {
+        List<String> errors = new ArrayList<>();
+        String teamId = player.getTeamId();
+        if (teamId != null && !teamId.isBlank() && findTeamById(teamId).isEmpty()) {
+            errors.add("战队ID不存在: " + teamId);
+        }
+        List<String> missingHeroIds = player.getHeroIds().stream()
+                .filter(heroId -> findHeroById(heroId).isEmpty())
+                .toList();
+        if (!missingHeroIds.isEmpty()) {
+            errors.add("英雄ID不存在: " + String.join(", ", missingHeroIds));
+        }
+        if (!errors.isEmpty()) {
+            throw new IllegalArgumentException(String.join("；", errors));
+        }
+    }
+
     private <T> void requireNewId(Map<String, T> map, String id, String label) {
-        if (map.containsKey(id)) {
+        if (keyOf(map, id).isPresent()) {
             throw new IllegalArgumentException(label + "ID重复: " + id);
         }
+    }
+
+    private <T> Optional<T> findById(Map<String, T> map, String id) {
+        return keyOf(map, id).map(map::get);
+    }
+
+    private <T> Optional<String> keyOf(Map<String, T> map, String id) {
+        if (id == null) {
+            return Optional.empty();
+        }
+        T exact = map.get(id);
+        if (exact != null) {
+            return Optional.of(id);
+        }
+        return map.keySet().stream()
+                .filter(key -> key.equalsIgnoreCase(id))
+                .findFirst();
     }
 }

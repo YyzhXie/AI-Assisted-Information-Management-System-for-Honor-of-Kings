@@ -150,11 +150,12 @@ public class SearchService implements Searchable<Player> {
         if (team == null) {
             return "未找到战队。";
         }
-        return manager.matchesForTeam(teamId).stream()
+        String resolvedTeamId = team.getId();
+        return manager.matchesForTeam(resolvedTeamId).stream()
                 .limit(limit)
                 .map(match -> String.format("日期: %s | 对手: %s | 结果: %s | 记录ID: %s",
-                        match.getDate(), teamName(match.opponentOf(teamId)),
-                        match.getWinnerTeamId().equals(teamId) ? "胜利" : "失败", match.getId()))
+                        match.getDate(), teamName(match.opponentOf(resolvedTeamId)),
+                        match.getWinnerTeamId().equals(resolvedTeamId) ? "胜利" : "失败", match.getId()))
                 .collect(Collectors.joining("\n"));
     }
 

@@ -49,9 +49,11 @@ import java.awt.Insets;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class VisualizationFrame extends JFrame {
@@ -366,7 +368,7 @@ public class VisualizationFrame extends JFrame {
             }
         });
         adminDataType.addActionListener(event -> refreshAdminEditorList());
-        newButton.addActionListener(event -> clearAdminForm());
+        newButton.addActionListener(event -> prepareNewAdminForm());
         saveButton.addActionListener(event -> saveAdminForm());
         deleteButton.addActionListener(event -> deleteSelectedAdminItem());
         saveJsonButton.addActionListener(event -> saveJsonFromGui());
@@ -632,15 +634,19 @@ public class VisualizationFrame extends JFrame {
         adminFormPanel.removeAll();
         String[][] fields = switch (currentAdminType()) {
             case "管理员" -> new String[][]{{"id", "管理员ID"}, {"username", "用户名"}, {"password", "密码"}, {"displayName", "显示名"}};
-            case "玩家" -> new String[][]{{"id", "玩家ID"}, {"username", "用户名"}, {"password", "密码"}, {"displayName", "昵称"}, {"level", "等级"}, {"wins", "胜场"}, {"losses", "负场"}, {"teamId", "战队ID"}, {"heroIds", "英雄ID(逗号)"}};
-            case "英雄" -> new String[][]{{"id", "英雄ID"}, {"name", "名称"}, {"type", "类型"}, {"attack", "攻击"}, {"defense", "防御"}, {"skillPower", "技能"}, {"equipmentIds", "装备ID(逗号)"}};
-            case "装备" -> new String[][]{{"id", "装备ID"}, {"name", "名称"}, {"type", "类型"}, {"rating", "评分"}, {"description", "属性描述"}};
-            case "战队" -> new String[][]{{"id", "战队ID"}, {"name", "名称"}, {"memberIds", "成员ID(逗号)"}};
-            case "对战记录" -> new String[][]{{"id", "对战ID"}, {"date", "日期yyyy-MM-dd"}, {"teamAId", "队伍A"}, {"teamBId", "队伍B"}, {"winnerTeamId", "胜者战队"}, {"choices", "英雄选择(P001:h003,...)"}};
+            case "玩家" -> new String[][]{{"id", "玩家ID"}, {"username", "用户名*"}, {"password", "密码*"}, {"displayName", "昵称*"}, {"level", "等级"}, {"wins", "胜场"}, {"losses", "负场"}, {"teamId", "战队ID"}, {"heroIds", "英雄ID(逗号)"}};
+            case "英雄" -> new String[][]{{"id", "英雄ID"}, {"name", "名称*"}, {"type", "类型*"}, {"attack", "攻击*"}, {"defense", "防御*"}, {"skillPower", "技能*"}, {"equipmentIds", "装备ID(逗号)*"}};
+            case "装备" -> new String[][]{{"id", "装备ID"}, {"name", "名称*"}, {"type", "类型*"}, {"rating", "评分*"}, {"description", "属性描述"}};
+            case "战队" -> new String[][]{{"id", "战队ID"}, {"name", "名称*"}, {"memberIds", "成员ID(逗号)"}};
+            case "对战记录" -> new String[][]{{"id", "对战ID"}, {"date", "日期yyyy-MM-dd*"}, {"teamAId", "队伍A*"}, {"teamBId", "队伍B*"}, {"winnerTeamId", "胜者战队*"}, {"choices", "英雄选择(P001:H003,...)*"}};
             default -> new String[0][0];
         };
         for (int i = 0; i < fields.length; i++) {
             JTextField field = new JTextField(28);
+            if ("id".equals(fields[i][0]) && isAutoIdType(currentAdminType())) {
+                field.setEditable(false);
+                field.setFocusable(false);
+            }
             adminFields.put(fields[i][0], field);
             addFormRow(adminFormPanel, i, fields[i][1], field);
         }
@@ -700,10 +706,15 @@ public class VisualizationFrame extends JFrame {
     private void clearAdminForm() {
         clearAdminFields();
         adminEditList.clearSelection();
+        applyNewAdminDefaults();
     }
 
     private void clearAdminFields() {
         adminFields.values().forEach(field -> field.setText(""));
+    }
+
+    private void prepareNewAdminForm() {
+        clearAdminForm();
     }
 
     private void saveAdminForm() {
@@ -713,7 +724,7 @@ public class VisualizationFrame extends JFrame {
             if (id.isEmpty()) {
                 throw new IllegalArgumentException("ID不能为空。");
             }
-            switch (type) {
+            boolean saved = switch (type) {
                 case "管理员" -> saveAdmin(id);
                 case "玩家" -> savePlayer(id);
                 case "英雄" -> saveHero(id);
@@ -721,6 +732,9 @@ public class VisualizationFrame extends JFrame {
                 case "战队" -> saveTeam(id);
                 case "对战记录" -> saveMatch(id);
                 default -> throw new IllegalArgumentException("未知数据类型。");
+            };
+            if (!saved) {
+                return;
             }
             refreshAllViews();
             refreshAdminEditorList();
@@ -730,26 +744,39 @@ public class VisualizationFrame extends JFrame {
         }
     }
 
-    private void saveAdmin(String id) {
+    private boolean saveAdmin(String id) {
+        id = normalizeRequiredCode(id, "A", "管理员ID");
         Admin admin = manager.findAdminById(id).orElse(null);
         if (admin == null) {
             manager.addAdmin(new Admin(id, field("username"), field("password"), field("displayName")));
-            return;
+            return true;
         }
         admin.setUsername(field("username"));
         admin.setPassword(field("password"));
         admin.setDisplayName(field("displayName"));
         updateLoginState();
+        return true;
     }
 
-    private void savePlayer(String id) {
+    private boolean savePlayer(String id) {
+        id = normalizeRequiredCode(id, "P", "玩家ID");
+        ensureRequiredFields(List.of("username", "password", "displayName"), Map.of(
+                "username", "用户名",
+                "password", "密码",
+                "displayName", "昵称"));
+        String teamId = normalizeOptionalCode(field("teamId"), "T");
+        List<String> heroIds = normalizeCodeList(field("heroIds"), "H");
         Player player = manager.findPlayerById(id).orElse(null);
+        if (player != null && !isEditingSelectedId(id, Player.class)
+                && !confirmOverwrite("玩家", id, "该玩家原有用户名、密码、昵称和战绩会被新表单覆盖。")) {
+            return false;
+        }
         if (player == null) {
             player = new Player(id, field("username"), field("password"), field("displayName"),
-                    intField("level", 1), intField("wins", 0), intField("losses", 0), field("teamId"));
-            player.replaceHeroIds(csv(field("heroIds")));
+                    intField("level", 1), intField("wins", 0), intField("losses", 0), teamId);
+            player.replaceHeroIds(heroIds);
             manager.addPlayer(player);
-            return;
+            return true;
         }
         player.setUsername(field("username"));
         player.setPassword(field("password"));
@@ -757,69 +784,117 @@ public class VisualizationFrame extends JFrame {
         player.setLevel(intField("level", 1));
         player.setWins(intField("wins", 0));
         player.setLosses(intField("losses", 0));
-        player.setTeamId(field("teamId"));
-        player.replaceHeroIds(csv(field("heroIds")));
+        player.setTeamId(teamId);
+        player.replaceHeroIds(heroIds);
         manager.replacePlayer(player);
+        return true;
     }
 
-    private void saveHero(String id) {
+    private boolean saveHero(String id) {
+        id = normalizeRequiredCode(id, "H", "英雄ID");
+        ensureRequiredFields(List.of("name", "type", "attack", "defense", "skillPower", "equipmentIds"), Map.of(
+                "name", "名称",
+                "type", "类型",
+                "attack", "攻击",
+                "defense", "防御",
+                "skillPower", "技能",
+                "equipmentIds", "装备ID"));
+        Hero candidate = new Hero(id, field("name"), HeroType.valueOf(field("type").toUpperCase()),
+                intField("attack", 0), intField("defense", 0), intField("skillPower", 0));
+        candidate.replaceCompatibleEquipmentIds(normalizeCodeList(field("equipmentIds"), "E"));
+        manager.validateHeroReferences(candidate);
         Hero hero = manager.findHeroById(id).orElse(null);
-        if (hero == null) {
-            hero = new Hero(id, field("name"), HeroType.valueOf(field("type").toUpperCase()),
-                    intField("attack", 0), intField("defense", 0), intField("skillPower", 0));
-            hero.replaceCompatibleEquipmentIds(csv(field("equipmentIds")));
-            manager.addHero(hero);
-            return;
+        if (hero != null && !isEditingSelectedId(id, Hero.class)
+                && !confirmOverwrite("英雄", id, "该英雄原有名称、类型、属性和兼容装备会被新表单覆盖。")) {
+            return false;
         }
-        hero.setName(field("name"));
-        hero.setType(HeroType.valueOf(field("type").toUpperCase()));
-        hero.setAttack(intField("attack", 0));
-        hero.setDefense(intField("defense", 0));
-        hero.setSkillPower(intField("skillPower", 0));
-        hero.replaceCompatibleEquipmentIds(csv(field("equipmentIds")));
+        if (hero == null) {
+            manager.addHero(candidate);
+            return true;
+        }
+        hero.setName(candidate.getName());
+        hero.setType(candidate.getType());
+        hero.setAttack(candidate.getAttack());
+        hero.setDefense(candidate.getDefense());
+        hero.setSkillPower(candidate.getSkillPower());
+        hero.replaceCompatibleEquipmentIds(candidate.getCompatibleEquipmentIds());
+        return true;
     }
 
-    private void saveEquipment(String id) {
+    private boolean saveEquipment(String id) {
+        id = normalizeRequiredCode(id, "E", "装备ID");
+        ensureRequiredFields(List.of("name", "type", "rating"), Map.of(
+                "name", "名称",
+                "type", "类型",
+                "rating", "评分"));
         Equipment equipment = manager.findEquipmentById(id).orElse(null);
+        if (equipment != null && !isEditingSelectedId(id, Equipment.class)
+                && !confirmOverwrite("装备", id, "该装备原有名称、类型、评分和属性描述会被新表单覆盖。")) {
+            return false;
+        }
         if (equipment == null) {
             manager.addEquipment(new Equipment(id, field("name"), EquipmentType.valueOf(field("type").toUpperCase()),
                     doubleField("rating", 0.0), field("description")));
-            return;
+            return true;
         }
         equipment.setName(field("name"));
         equipment.setType(EquipmentType.valueOf(field("type").toUpperCase()));
         equipment.setRating(doubleField("rating", 0.0));
         equipment.setAttributeDescription(field("description"));
+        return true;
     }
 
-    private void saveTeam(String id) {
+    private boolean saveTeam(String id) {
+        id = normalizeRequiredCode(id, "T", "战队ID");
+        ensureRequiredFields(List.of("name"), Map.of("name", "名称"));
+        Team candidate = new Team(id, field("name"));
+        candidate.replaceMemberIds(normalizeCodeList(field("memberIds"), "P"));
+        manager.validateTeamMemberReferences(candidate);
         Team team = manager.findTeamById(id).orElse(null);
-        if (team == null) {
-            team = new Team(id, field("name"));
-            team.replaceMemberIds(csv(field("memberIds")));
-            manager.addTeam(team);
-            return;
+        if (team != null && !isEditingSelectedId(id, Team.class)
+                && !confirmOverwrite("战队", id, "该战队原有名称和成员列表会被新表单覆盖。")) {
+            return false;
         }
-        team.setName(field("name"));
-        team.replaceMemberIds(csv(field("memberIds")));
+        if (team == null) {
+            manager.addTeam(candidate);
+            return true;
+        }
+        team.setName(candidate.getName());
+        team.replaceMemberIds(candidate.getMemberIds());
+        return true;
     }
 
-    private void saveMatch(String id) {
+    private boolean saveMatch(String id) {
+        id = normalizeRequiredCode(id, "M", "对战ID");
+        ensureRequiredFields(List.of("date", "teamAId", "teamBId", "winnerTeamId", "choices"), Map.of(
+                "date", "日期",
+                "teamAId", "队伍A",
+                "teamBId", "队伍B",
+                "winnerTeamId", "胜者战队",
+                "choices", "英雄选择"));
+        MatchRecord candidate = new MatchRecord(id, parseDate(field("date")), normalizeRequiredCode(field("teamAId"), "T", "队伍A"),
+                normalizeRequiredCode(field("teamBId"), "T", "队伍B"), normalizeRequiredCode(field("winnerTeamId"), "T", "胜者战队"));
+        candidate.replacePlayerHeroChoices(parseChoices(field("choices")));
+        manager.validateMatchReferences(candidate);
+        String matchId = id;
         MatchRecord match = manager.getMatches().stream()
-                .filter(item -> item.getId().equals(id))
+                .filter(item -> item.getId().equals(matchId))
                 .findFirst()
                 .orElse(null);
-        if (match == null) {
-            match = new MatchRecord(id, parseDate(field("date")), field("teamAId"), field("teamBId"), field("winnerTeamId"));
-            match.replacePlayerHeroChoices(parseChoices(field("choices")));
-            manager.addMatch(match);
-            return;
+        if (match != null && !isEditingSelectedId(id, MatchRecord.class)
+                && !confirmOverwrite("对战记录", id, "该对战记录原有日期、队伍、胜者和英雄选择会被新表单覆盖。")) {
+            return false;
         }
-        match.setDate(parseDate(field("date")));
-        match.setTeamAId(field("teamAId"));
-        match.setTeamBId(field("teamBId"));
-        match.setWinnerTeamId(field("winnerTeamId"));
-        match.replacePlayerHeroChoices(parseChoices(field("choices")));
+        if (match == null) {
+            manager.addMatch(candidate);
+            return true;
+        }
+        match.setDate(candidate.getDate());
+        match.setTeamAId(candidate.getTeamAId());
+        match.setTeamBId(candidate.getTeamBId());
+        match.setWinnerTeamId(candidate.getWinnerTeamId());
+        match.replacePlayerHeroChoices(candidate.getPlayerHeroChoices());
+        return true;
     }
 
     private void deleteSelectedAdminItem() {
@@ -828,7 +903,7 @@ public class VisualizationFrame extends JFrame {
             JOptionPane.showMessageDialog(this, "请先选择要删除的数据。", "无法删除", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        int confirm = JOptionPane.showConfirmDialog(this, "确认删除 " + adminListText(item) + " 吗？", "确认删除", JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(this, deleteConfirmationMessage(item), "确认删除", JOptionPane.YES_NO_OPTION);
         if (confirm != JOptionPane.YES_OPTION) {
             return;
         }
@@ -888,6 +963,142 @@ public class VisualizationFrame extends JFrame {
         return String.valueOf(item);
     }
 
+    private String deleteConfirmationMessage(Object item) {
+        if (item instanceof Player) {
+            return "确认删除玩家 " + adminListText(item) + " 吗？\n删除后会同步从战队成员列表中移除。";
+        }
+        if (item instanceof Hero) {
+            return "确认删除英雄 " + adminListText(item) + " 吗？\n删除后会同步从玩家英雄列表中移除。";
+        }
+        if (item instanceof Equipment) {
+            return "确认删除装备 " + adminListText(item) + " 吗？\n删除后会同步从英雄兼容装备中移除。";
+        }
+        if (item instanceof Team) {
+            return "确认删除战队 " + adminListText(item) + " 吗？\n删除后相关玩家的战队ID会被清空。";
+        }
+        return "确认删除 " + adminListText(item) + " 吗？";
+    }
+
+    private void applyNewAdminDefaults() {
+        String type = currentAdminType();
+        if ("玩家".equals(type)) {
+            String id = nextCode(manager.getPlayers().stream().map(Player::getId).toList(), "P");
+            setField("id", id);
+            setField("username", id);
+        } else if ("英雄".equals(type)) {
+            setField("id", nextCode(manager.getHeroes().stream().map(Hero::getId).toList(), "H"));
+        } else if ("装备".equals(type)) {
+            setField("id", nextCode(manager.getEquipment().stream().map(Equipment::getId).toList(), "E"));
+        } else if ("战队".equals(type)) {
+            setField("id", nextCode(manager.getTeams().stream().map(Team::getId).toList(), "T"));
+        } else if ("对战记录".equals(type)) {
+            setField("id", nextCode(manager.getMatches().stream().map(MatchRecord::getId).toList(), "M"));
+        }
+    }
+
+    private boolean isAutoIdType(String type) {
+        return "玩家".equals(type) || "英雄".equals(type) || "装备".equals(type)
+                || "战队".equals(type) || "对战记录".equals(type);
+    }
+
+    private boolean confirmOverwrite(String label, String id, String detail) {
+        int confirm = JOptionPane.showConfirmDialog(this,
+                label + "ID " + id + " 已存在，是否覆盖原有信息？\n" + detail,
+                "确认覆盖", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        return confirm == JOptionPane.YES_OPTION;
+    }
+
+    private boolean isEditingSelectedId(String id, Class<?> itemType) {
+        Object selected = adminEditList.getSelectedValue();
+        if (!itemType.isInstance(selected)) {
+            return false;
+        }
+        if (selected instanceof Person person) {
+            return person.getId().equals(id);
+        }
+        if (selected instanceof Equipment equipment) {
+            return equipment.getId().equals(id);
+        }
+        if (selected instanceof Hero hero) {
+            return hero.getId().equals(id);
+        }
+        if (selected instanceof Team team) {
+            return team.getId().equals(id);
+        }
+        if (selected instanceof MatchRecord match) {
+            return match.getId().equals(id);
+        }
+        return false;
+    }
+
+    private void ensureRequiredFields(List<String> keys, Map<String, String> labels) {
+        List<String> missing = new ArrayList<>();
+        for (String key : keys) {
+            if (field(key).isBlank()) {
+                missing.add(labels.getOrDefault(key, key));
+            }
+        }
+        if (!missing.isEmpty()) {
+            throw new IllegalArgumentException("请补充必填项: " + String.join("、", missing) + "。");
+        }
+    }
+
+    private String normalizeOptionalCode(String raw, String prefix) {
+        if (raw == null || raw.isBlank()) {
+            return "";
+        }
+        return normalizeCode(raw, prefix);
+    }
+
+    private String normalizeRequiredCode(String raw, String prefix, String label) {
+        if (raw == null || raw.isBlank()) {
+            throw new IllegalArgumentException(label + "不能为空。");
+        }
+        return normalizeCode(raw, prefix);
+    }
+
+    private List<String> normalizeCodeList(String raw, String prefix) {
+        return csv(raw).stream()
+                .map(value -> normalizeCode(value, prefix))
+                .toList();
+    }
+
+    private String normalizeCode(String raw, String prefix) {
+        String value = raw.trim().toUpperCase(Locale.ROOT);
+        String upperPrefix = prefix.toUpperCase(Locale.ROOT);
+        if (value.startsWith(upperPrefix)) {
+            value = value.substring(upperPrefix.length());
+        }
+        if (!value.matches("\\d+")) {
+            throw new IllegalArgumentException(upperPrefix + "类ID必须由前缀和数字组成，例如 " + upperPrefix + "001。");
+        }
+        int number = Integer.parseInt(value);
+        return upperPrefix + String.format("%03d", number);
+    }
+
+    private String nextCode(Collection<String> ids, String prefix) {
+        int max = ids.stream()
+                .mapToInt(id -> numericSuffix(id, prefix))
+                .max()
+                .orElse(0);
+        return prefix + String.format("%03d", max + 1);
+    }
+
+    private int numericSuffix(String id, String prefix) {
+        if (id == null) {
+            return 0;
+        }
+        String value = id.trim().toUpperCase(Locale.ROOT);
+        String upperPrefix = prefix.toUpperCase(Locale.ROOT);
+        if (value.startsWith(upperPrefix)) {
+            value = value.substring(upperPrefix.length());
+        }
+        if (!value.matches("\\d+")) {
+            return 0;
+        }
+        return Integer.parseInt(value);
+    }
+
     private String field(String key) {
         JTextField textField = adminFields.get(key);
         return textField == null ? "" : textField.getText().trim();
@@ -933,9 +1144,9 @@ public class VisualizationFrame extends JFrame {
         for (String pair : csv(raw)) {
             String[] parts = pair.split(":", 2);
             if (parts.length != 2 || parts[0].isBlank() || parts[1].isBlank()) {
-                throw new IllegalArgumentException("英雄选择格式应为 P001:h003,P002:h011。");
+                throw new IllegalArgumentException("英雄选择格式应为 P001:H003,P002:H011。");
             }
-            choices.put(parts[0].trim(), parts[1].trim());
+            choices.put(normalizeCode(parts[0], "P"), normalizeCode(parts[1], "H"));
         }
         return choices;
     }
