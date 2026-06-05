@@ -49,6 +49,8 @@ public class GuiCompatibilitySmokeTest {
         SwingUtilities.invokeAndWait(() -> {
             VisualizationFrame frame = new VisualizationFrame(manager);
             frameRef.set(frame);
+            assertEquals("王者荣耀信息管理系统", frame.getTitle(), "GUI 窗口标题");
+            assertTextNotContains(frame.getTitle(), "AI", "GUI 窗口标题不显示AI相关词句");
             JTabbedPane tabs = findTabbedPane(frame.getContentPane());
             if (tabs == null) {
                 throw new AssertionError("未找到 GUI 页签组件");
@@ -61,7 +63,7 @@ public class GuiCompatibilitySmokeTest {
             assertEquals("编辑信息", tabs.getTitleAt(4), "编辑信息页签");
             assertTextContains(frame.getLoginStatusText(), "未登录", "GUI 初始登录状态");
             assertEquals("login", frame.getCurrentEditCardForTest(), "GUI 初始编辑页未登录状态");
-            assertEquals("登录已查看信息。", frame.getEditPromptText(), "GUI 未登录编辑提示");
+            assertEquals("登录以查看信息。", frame.getEditPromptText(), "GUI 未登录编辑提示");
             if (!frame.loginUser("P001", "123456")) {
                 throw new AssertionError("GUI 玩家登录失败");
             }

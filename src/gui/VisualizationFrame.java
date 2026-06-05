@@ -73,7 +73,7 @@ public class VisualizationFrame extends JFrame {
     private final JButton currentUserButton = new JButton("我的信息");
     private final CardLayout editCardLayout = new CardLayout();
     private final JPanel editPanel = new JPanel(editCardLayout);
-    private final JLabel editLoginPrompt = new JLabel("登录已查看信息。", JLabel.CENTER);
+    private final JLabel editLoginPrompt = new JLabel("登录以查看信息。", JLabel.CENTER);
     private final JTextField playerEditName = new JTextField(20);
     private final JTextField playerEditPassword = new JTextField(20);
     private final JComboBox<String> adminDataType = new JComboBox<>(new String[]{"管理员", "玩家", "英雄", "装备", "战队", "对战记录"});
@@ -106,7 +106,7 @@ public class VisualizationFrame extends JFrame {
     };
 
     public VisualizationFrame(GameDataManager manager) {
-        super("王者荣耀 AI 辅助信息管理系统 - Swing 可视化");
+        super("王者荣耀信息管理系统");
         this.manager = manager;
         this.authService = new AuthenticationService(manager);
         RecommendationEngine recommendationEngine = new RecommendationEngine(manager);
@@ -139,14 +139,11 @@ public class VisualizationFrame extends JFrame {
 
     private JPanel createHeader() {
         JPanel header = new JPanel(new BorderLayout(12, 4));
-        JLabel title = new JLabel("王者荣耀 AI 辅助信息管理系统");
+        JLabel title = new JLabel("王者荣耀信息管理系统");
         title.setFont(title.getFont().deriveFont(Font.BOLD, 24f));
-        JLabel subtitle = new JLabel("Swing 可视化版本：覆盖玩家查询、战队概览、英雄详情和排行榜");
-        subtitle.setForeground(java.awt.Color.DARK_GRAY);
 
         JPanel titlePanel = new JPanel(new BorderLayout(0, 4));
-        titlePanel.add(title, BorderLayout.NORTH);
-        titlePanel.add(subtitle, BorderLayout.CENTER);
+        titlePanel.add(title, BorderLayout.CENTER);
 
         loginStatus.setName("loginStatus");
         loginButton.setName("loginButton");
