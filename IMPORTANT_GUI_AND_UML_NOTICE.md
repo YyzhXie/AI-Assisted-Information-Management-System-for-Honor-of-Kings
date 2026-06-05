@@ -11,8 +11,10 @@ javac -encoding UTF-8 -d out src/Main.java src/GuiMain.java src/model/*.java src
 java -cp out GuiMain
 ```
 
-GUI 至少覆盖以下作业要求功能：
+GUI 覆盖以下功能：
 
+- 登录 / 登出
+- 我的信息
 - 玩家查询
 - 战队概览
 - 英雄详情

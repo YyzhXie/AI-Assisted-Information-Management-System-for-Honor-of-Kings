@@ -111,6 +111,7 @@ classDiagram
 
     GuiMain --> VisualizationFrame
     VisualizationFrame --> GameDataManager
+    VisualizationFrame --> AuthenticationService
     VisualizationFrame --> SearchService
     VisualizationFrame --> RankingService
 

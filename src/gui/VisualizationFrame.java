@@ -1,8 +1,11 @@
 package gui;
 
 import model.Hero;
+import model.Person;
 import model.Player;
+import model.Role;
 import model.Team;
+import service.AuthenticationService;
 import service.GameDataManager;
 import service.RankingService;
 import service.RecommendationEngine;
@@ -16,7 +19,9 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
@@ -38,8 +43,13 @@ import java.util.List;
 
 public class VisualizationFrame extends JFrame {
     private final GameDataManager manager;
+    private final AuthenticationService authService;
     private final SearchService searchService;
     private final RankingService rankingService;
+    private final JLabel loginStatus = new JLabel("未登录：可使用公开可视化");
+    private final JButton loginButton = new JButton("登录");
+    private final JButton logoutButton = new JButton("登出");
+    private final JButton currentUserButton = new JButton("我的信息");
 
     private final DefaultListModel<Player> playerListModel = new DefaultListModel<>();
     private final JList<Player> playerList = new JList<>(playerListModel);
@@ -66,6 +76,7 @@ public class VisualizationFrame extends JFrame {
     public VisualizationFrame(GameDataManager manager) {
         super("王者荣耀 AI 辅助信息管理系统 - Swing 可视化");
         this.manager = manager;
+        this.authService = new AuthenticationService(manager);
         RecommendationEngine recommendationEngine = new RecommendationEngine(manager);
         this.searchService = new SearchService(manager, recommendationEngine);
         this.rankingService = new RankingService(manager);
@@ -75,6 +86,7 @@ public class VisualizationFrame extends JFrame {
         setLocationByPlatform(true);
         setContentPane(createContent());
         refreshRanking();
+        updateLoginState();
         pack();
     }
 
@@ -98,8 +110,33 @@ public class VisualizationFrame extends JFrame {
         title.setFont(title.getFont().deriveFont(Font.BOLD, 24f));
         JLabel subtitle = new JLabel("Swing 可视化版本：覆盖玩家查询、战队概览、英雄详情和排行榜");
         subtitle.setForeground(java.awt.Color.DARK_GRAY);
-        header.add(title, BorderLayout.NORTH);
-        header.add(subtitle, BorderLayout.CENTER);
+
+        JPanel titlePanel = new JPanel(new BorderLayout(0, 4));
+        titlePanel.add(title, BorderLayout.NORTH);
+        titlePanel.add(subtitle, BorderLayout.CENTER);
+
+        loginStatus.setName("loginStatus");
+        loginButton.setName("loginButton");
+        logoutButton.setName("logoutButton");
+        currentUserButton.setName("currentUserButton");
+        loginButton.addActionListener(event -> showLoginDialog());
+        logoutButton.addActionListener(event -> logoutCurrentUser());
+        currentUserButton.addActionListener(event -> showCurrentUser());
+
+        JPanel accountPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(2, 4, 2, 4);
+        c.anchor = GridBagConstraints.EAST;
+        accountPanel.add(loginStatus, c);
+        c.gridy = 1;
+        accountPanel.add(loginButton, c);
+        c.gridx = 1;
+        accountPanel.add(logoutButton, c);
+        c.gridx = 2;
+        accountPanel.add(currentUserButton, c);
+
+        header.add(titlePanel, BorderLayout.CENTER);
+        header.add(accountPanel, BorderLayout.EAST);
         return header;
     }
 
@@ -307,6 +344,94 @@ public class VisualizationFrame extends JFrame {
                     player.getTotalMatches()
             });
         }
+    }
+
+    public boolean loginUser(String username, String password) {
+        return performLogin(username, password, false);
+    }
+
+    public void logoutCurrentUser() {
+        authService.logout();
+        updateLoginState();
+    }
+
+    public String getLoginStatusText() {
+        return loginStatus.getText();
+    }
+
+    private void showLoginDialog() {
+        JTextField username = new JTextField(18);
+        JPasswordField password = new JPasswordField(18);
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(4, 4, 4, 4);
+        c.anchor = GridBagConstraints.WEST;
+        panel.add(new JLabel("用户名:"), c);
+        c.gridx = 1;
+        panel.add(username, c);
+        c.gridx = 0;
+        c.gridy = 1;
+        panel.add(new JLabel("密码:"), c);
+        c.gridx = 1;
+        panel.add(password, c);
+
+        int result = JOptionPane.showConfirmDialog(this, panel, "用户登录", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) {
+            performLogin(username.getText(), new String(password.getPassword()), true);
+        }
+    }
+
+    private boolean performLogin(String username, String password, boolean showMessage) {
+        authService.logout();
+        Person user = authService.login(username.trim(), password);
+        if (user == null) {
+            if (showMessage) {
+                JOptionPane.showMessageDialog(this, "登录失败，请检查用户名和密码。", "登录失败", JOptionPane.WARNING_MESSAGE);
+            }
+            updateLoginState();
+            return false;
+        }
+
+        updateLoginState();
+        if (user instanceof Player player) {
+            showAllPlayers();
+            playerList.setSelectedValue(player, true);
+        }
+        if (showMessage) {
+            JOptionPane.showMessageDialog(this, "登录成功，欢迎 " + user.getDisplayName(), "登录成功", JOptionPane.INFORMATION_MESSAGE);
+        }
+        return true;
+    }
+
+    private void showCurrentUser() {
+        Person user = authService.getCurrentUser();
+        if (user == null) {
+            JOptionPane.showMessageDialog(this, "当前未登录。", "我的信息", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        if (user instanceof Player player) {
+            showAllPlayers();
+            playerList.setSelectedValue(player, true);
+            JOptionPane.showMessageDialog(this, searchService.playerDetails(player), "我的信息", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        JOptionPane.showMessageDialog(this, user.generateReport(), "我的信息", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void updateLoginState() {
+        Person user = authService.getCurrentUser();
+        if (user == null) {
+            loginStatus.setText("未登录：可使用公开可视化");
+            loginButton.setText("登录");
+            logoutButton.setEnabled(false);
+            currentUserButton.setEnabled(false);
+            return;
+        }
+        String role = user.getRole() == Role.ADMIN ? "管理员/教练" : "玩家";
+        loginStatus.setText("已登录：" + user.getDisplayName() + "（" + role + "）");
+        loginButton.setText("切换登录");
+        logoutButton.setEnabled(true);
+        currentUserButton.setEnabled(true);
     }
 
     private JPanel searchBar(String labelText, JTextField keyword, JButton button) {

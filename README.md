@@ -15,7 +15,7 @@ javac -encoding UTF-8 -d out src/Main.java src/GuiMain.java src/model/*.java src
 java -cp out GuiMain
 ```
 
-Swing GUI 属于正式作业可视化内容，支持玩家查询、战队概览、英雄详情和排行榜。更多说明见 `IMPORTANT_GUI_AND_UML_NOTICE.md`。
+Swing GUI 属于正式作业可视化内容，支持登录/登出、我的信息、玩家查询、战队概览、英雄详情和排行榜。更多说明见 `IMPORTANT_GUI_AND_UML_NOTICE.md`。
 
 ### Java 控制台版本
 
@@ -55,7 +55,7 @@ java -cp out Main
 - JSON 保存和加载数据
 - 启动时自动加载外部 JSON 数据，支持长期运营式追加战队和装备
 - 管理员和教练超级账户不进入公开玩家检索
-- Swing GUI 可视化：玩家查询、战队概览、英雄详情和排行榜
+- Swing GUI 可视化：登录/登出、我的信息、玩家查询、战队概览、英雄详情和排行榜
 
 ## 5. 使用的 Java 概念
 

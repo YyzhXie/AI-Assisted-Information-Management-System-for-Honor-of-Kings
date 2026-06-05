@@ -50,6 +50,21 @@ public class GuiCompatibilitySmokeTest {
             assertEquals("战队概览", tabs.getTitleAt(1), "战队概览页签");
             assertEquals("英雄详情", tabs.getTitleAt(2), "英雄详情页签");
             assertEquals("排行榜", tabs.getTitleAt(3), "排行榜页签");
+            assertTextContains(frame.getLoginStatusText(), "未登录", "GUI 初始登录状态");
+            if (!frame.loginUser("P001", "123456")) {
+                throw new AssertionError("GUI 玩家登录失败");
+            }
+            assertTextContains(frame.getLoginStatusText(), "阿离同学", "GUI 玩家登录状态");
+            frame.logoutCurrentUser();
+            assertTextContains(frame.getLoginStatusText(), "未登录", "GUI 登出状态");
+            if (!frame.loginUser("admin", "admin123")) {
+                throw new AssertionError("GUI 管理员登录失败");
+            }
+            assertTextContains(frame.getLoginStatusText(), "系统管理员", "GUI 管理员登录状态");
+            if (frame.loginUser("admin", "wrong")) {
+                throw new AssertionError("GUI 错误密码不应登录成功");
+            }
+            assertTextContains(frame.getLoginStatusText(), "未登录", "GUI 错误密码后回到未登录状态");
             frame.dispose();
         });
 
@@ -114,6 +129,12 @@ public class GuiCompatibilitySmokeTest {
     private static void assertEquals(Object expected, Object actual, String message) {
         if (!expected.equals(actual)) {
             throw new AssertionError(message + "，期望: " + expected + "，实际: " + actual);
+        }
+    }
+
+    private static void assertTextContains(String text, String expected, String message) {
+        if (!text.contains(expected)) {
+            throw new AssertionError(message + "，期望包含: " + expected + "，实际: " + text);
         }
     }
 }

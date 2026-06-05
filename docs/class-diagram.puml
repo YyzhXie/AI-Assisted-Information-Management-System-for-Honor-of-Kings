@@ -23,6 +23,7 @@ package "application" {
 package "gui" {
   class VisualizationFrame {
     - manager: GameDataManager
+    - authService: AuthenticationService
     - searchService: SearchService
     - rankingService: RankingService
     + VisualizationFrame(manager: GameDataManager)
@@ -229,6 +230,7 @@ GuiMain --> VisualizationFrame
 GuiMain --> FileStorageService
 GuiMain --> DataInitializer
 VisualizationFrame --> GameDataManager
+VisualizationFrame --> AuthenticationService
 VisualizationFrame --> SearchService
 VisualizationFrame --> RankingService
 VisualizationFrame --> RecommendationEngine

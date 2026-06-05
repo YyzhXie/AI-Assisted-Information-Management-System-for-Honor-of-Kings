@@ -32,6 +32,8 @@
 
 `GuiMain` 是 Swing 可视化入口，启动时优先读取 `data/game-data.json`，失败时回退 `DataInitializer` 内置数据。`VisualizationFrame` 使用页签组织四项可视化功能：玩家查询、战队概览、英雄详情和排行榜。玩家、战队和英雄页签采用“搜索框 + 列表 + 详情面板”的结构；排行榜页签使用表格展示名次、玩家 ID、昵称、等级、胜率和对战次数。
 
+Swing GUI 已接入 `AuthenticationService`。窗口顶部提供登录、登出和“我的信息”入口；未登录时仍可使用公开可视化，玩家登录后会自动定位到自己的玩家详情，管理员和教练登录后显示当前身份状态。切换登录时如果密码错误，GUI 会回到未登录状态，不复用旧用户状态。
+
 Swing GUI 属于正式 Java 作业内容。`Node.js-visualization` 分支仅作为额外实验，不作为作业提交内容。
 
 ## UML 文件

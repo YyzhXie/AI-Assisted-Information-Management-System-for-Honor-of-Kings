@@ -326,3 +326,12 @@ P001
 实际输出：修复 `FileStorageService.load()` 后，带 BOM JSON 可正常加载
 结果：通过
 发现的 bug：原解析器不能处理文件开头的 UTF-8 BOM，已修复。
+
+## TC36 Swing GUI 登录功能
+
+功能：GUI 身份验证
+输入：在 Swing GUI 中依次执行 `P001/123456` 登录、登出、`admin/admin123` 登录、登出、`admin/wrong` 登录
+预期输出：玩家登录后显示“阿离同学”并可定位到自己的玩家详情；管理员登录后显示“系统管理员”；切换登录时如果密码错误，登录失败且回到未登录状态
+实际输出：`GuiCompatibilitySmokeTest` 已覆盖该流程并输出 `GUI compatibility smoke test passed.`
+结果：通过
+发现的 bug：原 Swing GUI 只实现公开可视化，未接入 `AuthenticationService`；已补充登录、登出和“我的信息”入口。

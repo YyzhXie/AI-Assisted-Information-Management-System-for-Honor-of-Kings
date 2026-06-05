@@ -12,7 +12,7 @@
 - 控制台连续登录和退出：管理员、教练、多个玩家、错误密码。
 - 控制台连续添加和删除玩家信息。
 - 超级账户安全边界：`admin` 和 `coach` 不进入公开玩家搜索。
-- Swing GUI 与源程序兼容性：GUI 复用 `GameDataManager`、`SearchService`、`RankingService` 和 JSON 数据文件。
+- Swing GUI 与源程序兼容性：GUI 复用 `GameDataManager`、`AuthenticationService`、`SearchService`、`RankingService` 和 JSON 数据文件。
 - 控制台保存后的 JSON 能被 GUI 路径读取。
 - 外部工具保存带 BOM JSON 时，程序仍能加载。
 
@@ -27,6 +27,7 @@
 |GS-05|控制台保存到 GUI 加载|临时新增 `P930` 并保存 JSON，再用 GUI 路径加载|加载成功，GUI 窗口对象可创建；测试后已还原正式数据|
 |GS-06|超级账户公开搜索|搜索 `admin`、`coach`|公开玩家搜索返回 0 条，不暴露超级账户|
 |GS-07|带 BOM JSON 加载|构造临时带 UTF-8 BOM 的 JSON 文件|修复后可正常加载|
+|GS-08|GUI 登录状态|GUI 内执行玩家登录、登出、管理员登录和错误密码登录|登录状态正确更新，切换登录失败后回到未登录状态|
 
 ## 修复的问题
 
