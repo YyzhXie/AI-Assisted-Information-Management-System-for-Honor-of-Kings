@@ -1,5 +1,7 @@
-﻿* 0c5f28c (HEAD -> main) [AI-Implementation] 添加综合实力排名算法
-* 71ae922 (origin/main) [Docs] 更新Git历史证据
+﻿* d80401f (HEAD -> main) [Test] 验证中文重叠玩家候选检索
+* 4a99bde (origin/main) [Docs] 更新综合实力算法后的Git历史
+* 0c5f28c [AI-Implementation] 添加综合实力排名算法
+* 71ae922 [Docs] 更新Git历史证据
 * fcf896e [Test] 补充派生数据一致性评测
 * 1d2588e [Security] 隐藏管理员失败登录身份
 * 535d021 [GUI] 添加编辑信息页签
