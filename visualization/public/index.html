@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>王者荣耀 AI 辅助信息管理系统 | 可视化版</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Node.js Visualization</p>
+        <h1>王者荣耀 AI 辅助信息管理系统</h1>
+      </div>
+      <div class="header-meta">
+        <span id="dataSource">data/game-data.json</span>
+        <span id="generatedAt">等待加载</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="summary-grid" id="summaryGrid" aria-label="数据概览"></section>
+
+      <nav class="tabs" aria-label="可视化视图">
+        <button class="tab is-active" data-view="overview" type="button">总览</button>
+        <button class="tab" data-view="players" type="button">玩家</button>
+        <button class="tab" data-view="teams" type="button">战队</button>
+        <button class="tab" data-view="heroes" type="button">英雄</button>
+        <button class="tab" data-view="equipment" type="button">装备</button>
+        <button class="tab" data-view="matches" type="button">对战</button>
+      </nav>
+
+      <section class="view is-active" id="overviewView">
+        <div class="dashboard-grid">
+          <article class="panel wide">
+            <div class="panel-title">
+              <h2>胜率排行榜</h2>
+              <span>人工规则：等级、胜率、对战次数、ID 稳定排序</span>
+            </div>
+            <canvas id="winRateChart" height="260"></canvas>
+          </article>
+          <article class="panel">
+            <div class="panel-title">
+              <h2>英雄类型分布</h2>
+              <span>15 名英雄</span>
+            </div>
+            <canvas id="heroTypeChart" height="260"></canvas>
+          </article>
+          <article class="panel wide">
+            <div class="panel-title">
+              <h2>战队运营概览</h2>
+              <span>平均等级、胜率和成员规模</span>
+            </div>
+            <div id="teamBars" class="bar-stack"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-title">
+              <h2>装备评分 Top 8</h2>
+              <span>评分 + 兼容度</span>
+            </div>
+            <canvas id="equipmentChart" height="260"></canvas>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="playersView">
+        <div class="toolbar">
+          <input id="playerSearch" type="search" placeholder="搜索玩家 ID、用户名或昵称" />
+          <select id="rankingMode" aria-label="排行榜类型">
+            <option value="winRate">按胜率</option>
+            <option value="level">按等级</option>
+            <option value="matches">按对战次数</option>
+          </select>
+        </div>
+        <div class="split-layout">
+          <div class="list-panel" id="playerList"></div>
+          <article class="detail-panel" id="playerDetail"></article>
+        </div>
+      </section>
+
+      <section class="view" id="teamsView">
+        <div class="split-layout">
+          <div class="list-panel" id="teamList"></div>
+          <article class="detail-panel" id="teamDetail"></article>
+        </div>
+      </section>
+
+      <section class="view" id="heroesView">
+        <div class="toolbar">
+          <input id="heroSearch" type="search" placeholder="搜索英雄名称、类型或 ID" />
+        </div>
+        <div class="card-grid" id="heroGrid"></div>
+      </section>
+
+      <section class="view" id="equipmentView">
+        <div class="toolbar">
+          <input id="equipmentSearch" type="search" placeholder="搜索装备名称、类型或 ID" />
+        </div>
+        <div class="card-grid" id="equipmentGrid"></div>
+      </section>
+
+      <section class="view" id="matchesView">
+        <div class="toolbar">
+          <select id="matchTeamFilter" aria-label="筛选战队"></select>
+        </div>
+        <div class="timeline" id="matchTimeline"></div>
+      </section>
+    </main>
+
+    <template id="emptyStateTemplate">
+      <div class="empty-state">没有匹配的数据</div>
+    </template>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

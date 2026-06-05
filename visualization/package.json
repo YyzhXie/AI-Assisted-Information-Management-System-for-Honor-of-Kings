@@ -1,0 +1,14 @@
+{
+  "name": "honor-ai-visualization",
+  "version": "1.0.0",
+  "description": "Node.js visualization dashboard for the Honor of Kings AI information management dataset.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -6,6 +6,8 @@
 
 ## 2. 如何运行
 
+### Java 控制台版本
+
 在项目根目录执行：
 
 ```bash
@@ -16,6 +18,18 @@ java -cp out Main
 项目不依赖 Maven、Gradle 或第三方库，所有功能均由 Java 实现。
 
 程序启动时会优先自动加载 `data/game-data.json`。如果该文件不存在或格式错误，系统会回退到内置初始数据。
+
+### Node.js 可视化版本
+
+本分支新增 `visualization/` 子项目，用于把同一份 `data/game-data.json` 展示为网页仪表盘：
+
+```bash
+cd visualization
+npm test
+npm start
+```
+
+启动后访问 `http://localhost:3000`。该版本只暴露玩家、战队、英雄、装备和对战等公开数据，不向浏览器返回管理员、教练或密码字段。详细说明见 `docs/node-visualization.md`。
 
 ## 3. 默认登录账户
 
@@ -42,6 +56,7 @@ java -cp out Main
 - JSON 保存和加载数据
 - 启动时自动加载外部 JSON 数据，支持长期运营式追加战队和装备
 - 管理员和教练超级账户不进入公开玩家检索
+- Node.js 可视化仪表盘：总览图表、玩家筛选、战队详情、英雄推荐、装备评分和对战时间线
 
 ## 5. 使用的 Java 概念
 

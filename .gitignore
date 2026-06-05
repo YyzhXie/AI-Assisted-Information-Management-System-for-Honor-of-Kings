@@ -2,3 +2,4 @@ out/
 *.class
 data/*.tmp
 .idea/
+visualization/node_modules/
