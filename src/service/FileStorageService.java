@@ -35,6 +35,9 @@ public class FileStorageService implements Persistable {
     public GameDataManager load(String filePath) throws IOException {
         try {
             String json = Files.readString(Path.of(filePath), StandardCharsets.UTF_8);
+            if (!json.isEmpty() && json.charAt(0) == '\uFEFF') {
+                json = json.substring(1);
+            }
             Object parsed = new JsonParser(json).parse();
             if (!(parsed instanceof Map<?, ?> root)) {
                 throw new IOException("数据文件格式错误。");

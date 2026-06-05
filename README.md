@@ -80,7 +80,14 @@ java -cp out Main
 
 ## 8. 测试摘要
 
-测试文档位于 `docs/test-cases.md`，包含登录、查询、排行榜、数据管理、JSON 持久化、非法输入和连续登录稳定性等场景。连续登录专项报告位于 `docs/login-stability-report.md`，交互鲁棒性报告位于 `docs/robustness-report.md`，长期运营外部更新说明位于 `docs/operations-update-guide.md`，输出准确性评测位于 `docs/output-accuracy-report.md`。
+测试文档位于 `docs/test-cases.md`，包含登录、查询、排行榜、数据管理、JSON 持久化、非法输入、连续登录稳定性和 Swing GUI 兼容性等场景。连续登录专项报告位于 `docs/login-stability-report.md`，交互鲁棒性报告位于 `docs/robustness-report.md`，长期运营外部更新说明位于 `docs/operations-update-guide.md`，输出准确性评测位于 `docs/output-accuracy-report.md`，GUI 加入后的稳定性回归报告位于 `docs/gui-stability-report.md`。
+
+GUI 兼容烟测命令：
+
+```bash
+javac -encoding UTF-8 -d out src/Main.java src/GuiMain.java src/model/*.java src/service/*.java src/util/*.java src/gui/*.java src/test/*.java
+java -cp out test.GuiCompatibilitySmokeTest
+```
 
 ## 9. 已知限制
 
