@@ -45,26 +45,33 @@ public class GuiCompatibilitySmokeTest {
             if (tabs == null) {
                 throw new AssertionError("未找到 GUI 页签组件");
             }
-            assertEquals(4, tabs.getTabCount(), "GUI 页签数量");
+            assertEquals(5, tabs.getTabCount(), "GUI 页签数量");
             assertEquals("玩家查询", tabs.getTitleAt(0), "玩家查询页签");
             assertEquals("战队概览", tabs.getTitleAt(1), "战队概览页签");
             assertEquals("英雄详情", tabs.getTitleAt(2), "英雄详情页签");
             assertEquals("排行榜", tabs.getTitleAt(3), "排行榜页签");
+            assertEquals("编辑信息", tabs.getTitleAt(4), "编辑信息页签");
             assertTextContains(frame.getLoginStatusText(), "未登录", "GUI 初始登录状态");
+            assertEquals("login", frame.getCurrentEditCardForTest(), "GUI 初始编辑页未登录状态");
+            assertEquals("登录已查看信息。", frame.getEditPromptText(), "GUI 未登录编辑提示");
             if (!frame.loginUser("P001", "123456")) {
                 throw new AssertionError("GUI 玩家登录失败");
             }
             assertTextContains(frame.getLoginStatusText(), "阿离同学", "GUI 玩家登录状态");
+            assertEquals("player", frame.getCurrentEditCardForTest(), "GUI 玩家登录后编辑页状态");
             frame.logoutCurrentUser();
             assertTextContains(frame.getLoginStatusText(), "未登录", "GUI 登出状态");
+            assertEquals("login", frame.getCurrentEditCardForTest(), "GUI 登出后编辑页回到未登录状态");
             if (!frame.loginUser("admin", "admin123")) {
                 throw new AssertionError("GUI 管理员登录失败");
             }
             assertTextContains(frame.getLoginStatusText(), "系统管理员", "GUI 管理员登录状态");
+            assertEquals("admin", frame.getCurrentEditCardForTest(), "GUI 管理员登录后编辑页状态");
             if (frame.loginUser("admin", "wrong")) {
                 throw new AssertionError("GUI 错误密码不应登录成功");
             }
             assertTextContains(frame.getLoginStatusText(), "未登录", "GUI 错误密码后回到未登录状态");
+            assertEquals("login", frame.getCurrentEditCardForTest(), "GUI 错误密码后编辑页回到未登录状态");
             frame.dispose();
         });
 

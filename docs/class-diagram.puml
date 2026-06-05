@@ -27,6 +27,8 @@ package "gui" {
     - searchService: SearchService
     - rankingService: RankingService
     + VisualizationFrame(manager: GameDataManager)
+    + loginUser(username: String, password: String): boolean
+    + logoutCurrentUser(): void
   }
 }
 
@@ -151,6 +153,9 @@ package "service" {
     - teams: Map<String, Team>
     - matches: Map<String, MatchRecord>
     + addPlayer(player: Player): void
+    + addAdmin(admin: Admin): void
+    + deleteAdmin(adminId: String): boolean
+    + findAdminById(id: String): Optional<Admin>
     + findPlayerById(id: String): Optional<Player>
     + getPlayers(): Collection<Player>
     + matchesForPlayer(playerId: String): List<MatchRecord>

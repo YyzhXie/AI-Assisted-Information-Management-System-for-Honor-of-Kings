@@ -267,9 +267,9 @@ P001
 ## TC29 Swing GUI 功能覆盖检查
 
 功能：Swing GUI 可视化
-输入：执行 `java -cp out GuiMain`，在 GUI 中依次查看玩家查询、战队概览、英雄详情和排行榜页签
-预期输出：GUI 可以加载 `data/game-data.json`，并支持玩家查询、战队概览、英雄详情和排行榜四项可视化要求
-实际输出：Swing GUI 已实现四个页签；玩家、战队和英雄使用搜索框、候选列表和详情面板；排行榜使用表格并显示同位排序规则
+输入：执行 `java -cp out GuiMain`，在 GUI 中依次查看玩家查询、战队概览、英雄详情、排行榜和编辑信息页签
+预期输出：GUI 可以加载 `data/game-data.json`，并支持玩家查询、战队概览、英雄详情、排行榜和编辑信息
+实际输出：Swing GUI 已实现五个页签；玩家、战队和英雄使用搜索框、候选列表和详情面板；排行榜使用表格并显示同位排序规则；编辑信息页签根据登录身份切换内容
 结果：通过
 发现的 bug：无
 
@@ -304,7 +304,7 @@ P001
 
 功能：Swing GUI 兼容性
 输入：运行 `java -cp out test.GuiCompatibilitySmokeTest`
-预期输出：GUI 四个页签存在；公开搜索不暴露超级账户；连续增删玩家后排行榜稳定
+预期输出：GUI 五个页签存在；公开搜索不暴露超级账户；连续增删玩家后排行榜稳定；退出登录后编辑页回到未登录状态
 实际输出：输出 `GUI compatibility smoke test passed.`
 结果：通过
 发现的 bug：无
@@ -335,3 +335,12 @@ P001
 实际输出：`GuiCompatibilitySmokeTest` 已覆盖该流程并输出 `GUI compatibility smoke test passed.`
 结果：通过
 发现的 bug：原 Swing GUI 只实现公开可视化，未接入 `AuthenticationService`；已补充登录、登出和“我的信息”入口。
+
+## TC37 Swing GUI 编辑信息页签
+
+功能：GUI 按身份编辑与登出回退
+输入：打开 `java -cp out GuiMain`；未登录查看“编辑信息”；使用 `P001/123456` 登录后查看并修改自己的昵称或密码；登出；使用 `admin/admin123` 登录后查看管理员数据维护界面；再用错误密码切换登录
+预期输出：未登录时“编辑信息”居中显示“登录已查看信息。”；玩家只能编辑自己的昵称和密码；管理员可选择管理员、玩家、英雄、装备、战队、对战记录并连续新建、保存或删除；任何登出或错误密码切换后，编辑页回到未登录状态
+实际输出：`GuiCompatibilitySmokeTest` 已验证初始未登录、玩家登录、登出、管理员登录和错误密码后均切换到正确编辑卡片；手动检查确认按钮和数据类型表单可显示
+结果：通过
+发现的 bug：新增编辑页后需确保 `CardLayout` 状态随 `AuthenticationService.logout()` 同步切回未登录卡片；已增加状态刷新和烟测断言。

@@ -36,6 +36,13 @@ public class GameDataManager {
         admins.put(admin.getId(), admin);
     }
 
+    public void replaceAdmin(Admin admin) {
+        if (!admins.containsKey(admin.getId())) {
+            throw new IllegalArgumentException("管理员不存在: " + admin.getId());
+        }
+        admins.put(admin.getId(), admin);
+    }
+
     public void addHero(Hero hero) {
         requireNewId(heroes, hero.getId(), "英雄");
         heroes.put(hero.getId(), hero);
@@ -75,6 +82,10 @@ public class GameDataManager {
         }
         removePlayerFromTeams(playerId);
         return true;
+    }
+
+    public boolean deleteAdmin(String adminId) {
+        return admins.remove(adminId) != null;
     }
 
     public boolean deleteHero(String heroId) {
@@ -120,6 +131,10 @@ public class GameDataManager {
 
     public Optional<Player> findPlayerById(String id) {
         return Optional.ofNullable(players.get(id));
+    }
+
+    public Optional<Admin> findAdminById(String id) {
+        return Optional.ofNullable(admins.get(id));
     }
 
     public Optional<Player> findPlayerByUsername(String username) {

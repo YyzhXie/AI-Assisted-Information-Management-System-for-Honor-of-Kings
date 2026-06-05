@@ -15,7 +15,7 @@ javac -encoding UTF-8 -d out src/Main.java src/GuiMain.java src/model/*.java src
 java -cp out GuiMain
 ```
 
-Swing GUI 属于正式作业可视化内容，支持登录/登出、我的信息、玩家查询、战队概览、英雄详情和排行榜。更多说明见 `IMPORTANT_GUI_AND_UML_NOTICE.md`。
+Swing GUI 属于正式作业可视化内容，支持登录/登出、我的信息、玩家查询、战队概览、英雄详情、排行榜和“编辑信息”页签。更多说明见 `IMPORTANT_GUI_AND_UML_NOTICE.md`。
 
 ### Java 控制台版本
 
@@ -50,12 +50,12 @@ java -cp out Main
 - 玩家或战队最近 N 场对战历史
 - 按胜率、等级、对战次数显示排行榜
 - 排行榜同位时按等级、胜率、对战次数和玩家 ID 顺序稳定排序
-- 管理员添加、编辑、删除玩家、英雄、装备、战队和对战记录
-- 玩家编辑自己的昵称
+- 管理员添加、编辑、删除管理员、玩家、英雄、装备、战队和对战记录
+- 玩家编辑自己的昵称和密码
 - JSON 保存和加载数据
 - 启动时自动加载外部 JSON 数据，支持长期运营式追加战队和装备
 - 管理员和教练超级账户不进入公开玩家检索
-- Swing GUI 可视化：登录/登出、我的信息、玩家查询、战队概览、英雄详情和排行榜
+- Swing GUI 可视化：登录/登出、我的信息、玩家查询、战队概览、英雄详情、排行榜和登录后的编辑信息
 
 ## 5. 使用的 Java 概念
 
@@ -66,7 +66,7 @@ java -cp out Main
 - 枚举：角色、英雄类型、装备类型、对战结果
 - 异常处理：处理输入错误、重复 ID、文件加载错误
 - 文件 I/O：使用 Java 标准库读写 JSON 文本
-- GUI：使用 Java Swing 实现图形化查询和排行榜界面
+- GUI：使用 Java Swing 实现图形化查询、排行榜和按登录身份控制的编辑界面
 
 ## 6. UML 类图
 
@@ -92,4 +92,4 @@ java -cp out test.GuiCompatibilitySmokeTest
 ## 9. 已知限制
 
 - JSON 解析器只支持本项目保存的固定结构，不作为通用 JSON 库使用。
-- GUI 使用 Swing 实现，侧重课程要求的查询和排行榜可视化，不包含复杂动画或 Web 前端。
+- GUI 使用 Swing 实现，侧重课程要求的查询、排行榜和登录后编辑信息，不包含复杂动画或 Web 前端。

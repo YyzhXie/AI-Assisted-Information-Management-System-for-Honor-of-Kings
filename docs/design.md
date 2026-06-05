@@ -11,7 +11,7 @@
 - `Player` 关联多个英雄 ID，`Hero` 关联多个装备 ID，便于 JSON 保存。
 - `MatchRecord` 保存两支战队、胜者和玩家英雄选择，用于对战历史和英雄选用率。
 - 服务层统一接收 `GameDataManager`，避免 `Main` 直接维护多个集合。
-- `VisualizationFrame` 复用 `SearchService` 和 `RankingService`，不重新计算业务规则，保证 Swing GUI 与控制台输出一致。
+- `VisualizationFrame` 复用 `AuthenticationService`、`SearchService`、`RankingService` 和 `GameDataManager`，不重新计算业务规则，保证 Swing GUI 与控制台输出一致。
 
 ## 接口设计说明
 
@@ -30,9 +30,11 @@
 
 ## Swing GUI 设计
 
-`GuiMain` 是 Swing 可视化入口，启动时优先读取 `data/game-data.json`，失败时回退 `DataInitializer` 内置数据。`VisualizationFrame` 使用页签组织四项可视化功能：玩家查询、战队概览、英雄详情和排行榜。玩家、战队和英雄页签采用“搜索框 + 列表 + 详情面板”的结构；排行榜页签使用表格展示名次、玩家 ID、昵称、等级、胜率和对战次数。
+`GuiMain` 是 Swing 可视化入口，启动时优先读取 `data/game-data.json`，失败时回退 `DataInitializer` 内置数据。`VisualizationFrame` 使用页签组织五项可视化功能：玩家查询、战队概览、英雄详情、排行榜和编辑信息。玩家、战队和英雄页签采用“搜索框 + 列表 + 详情面板”的结构；排行榜页签使用表格展示名次、玩家 ID、昵称、等级、胜率和对战次数。
 
 Swing GUI 已接入 `AuthenticationService`。窗口顶部提供登录、登出和“我的信息”入口；未登录时仍可使用公开可视化，玩家登录后会自动定位到自己的玩家详情，管理员和教练登录后显示当前身份状态。切换登录时如果密码错误，GUI 会回到未登录状态，不复用旧用户状态。
+
+“编辑信息”页签使用 `CardLayout` 根据当前登录身份切换界面。未登录时显示居中提示“登录已查看信息。”；玩家登录后只显示自己的昵称和密码编辑表单；管理员或教练登录后显示通用数据维护界面，可按数据类型连续创建、修改或删除管理员、玩家、英雄、装备、战队和对战记录。登出会清空当前用户并强制切回未登录卡片，避免旧账号的编辑界面残留。
 
 Swing GUI 属于正式 Java 作业内容。`Node.js-visualization` 分支仅作为额外实验，不作为作业提交内容。
 

@@ -8,7 +8,10 @@
 classDiagram
     class Main
     class GuiMain
-    class VisualizationFrame
+    class VisualizationFrame {
+        +loginUser(String, String) boolean
+        +logoutCurrentUser() void
+    }
 
     class Reportable {
         <<interface>>
@@ -81,7 +84,12 @@ classDiagram
         +save(GameDataManager, String) void
         +load(String) GameDataManager
     }
-    class GameDataManager
+    class GameDataManager {
+        +addAdmin(Admin) void
+        +deleteAdmin(String) boolean
+        +findAdminById(String) Optional~Admin~
+        +findPlayerById(String) Optional~Player~
+    }
     class AuthenticationService
     class SearchService
     class RankingService

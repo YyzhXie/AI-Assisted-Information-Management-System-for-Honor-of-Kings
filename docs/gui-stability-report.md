@@ -5,7 +5,7 @@
 
 ## 结论
 
-整体稳定。加入 Swing GUI 后，控制台连续登录/退出、玩家连续添加/删除、公开查询安全边界、排行榜排序和 GUI 读取同一份 JSON 数据均保持正常。评测中发现一个外部 JSON 兼容性边界：带 UTF-8 BOM 的 JSON 文件会导致自写解析器启动加载失败。该问题已在 `FileStorageService.load()` 中修复，并加入 `GuiCompatibilitySmokeTest` 自动烟测。
+整体稳定。加入 Swing GUI 后，控制台连续登录/退出、玩家连续添加/删除、公开查询安全边界、排行榜排序、编辑信息页签状态切换和 GUI 读取同一份 JSON 数据均保持正常。评测中发现一个外部 JSON 兼容性边界：带 UTF-8 BOM 的 JSON 文件会导致自写解析器启动加载失败。该问题已在 `FileStorageService.load()` 中修复，并加入 `GuiCompatibilitySmokeTest` 自动烟测。
 
 ## 评测范围
 
@@ -13,6 +13,7 @@
 - 控制台连续添加和删除玩家信息。
 - 超级账户安全边界：`admin` 和 `coach` 不进入公开玩家搜索。
 - Swing GUI 与源程序兼容性：GUI 复用 `GameDataManager`、`AuthenticationService`、`SearchService`、`RankingService` 和 JSON 数据文件。
+- GUI 编辑信息页签：未登录提示、玩家自我编辑、管理员数据维护、登出后回到未登录状态。
 - 控制台保存后的 JSON 能被 GUI 路径读取。
 - 外部工具保存带 BOM JSON 时，程序仍能加载。
 
@@ -23,11 +24,12 @@
 |GS-01|完整编译|编译 `Main`、`GuiMain`、模型、服务、工具、GUI 和测试类|通过|
 |GS-02|连续登录退出|`admin` -> `coach` -> `P001` -> `P012` -> 错误密码|菜单权限切换正常，失败登录不复用旧用户|
 |GS-03|连续添加/删除玩家|管理员连续添加 `P901`、`P902`，再连续删除|添加和删除均成功，删除后公开查询显示未找到|
-|GS-04|GUI 兼容烟测|运行 `java -cp out test.GuiCompatibilitySmokeTest`|通过，GUI 四个页签存在，排行榜和公开搜索稳定|
+|GS-04|GUI 兼容烟测|运行 `java -cp out test.GuiCompatibilitySmokeTest`|通过，GUI 五个页签存在，排行榜和公开搜索稳定|
 |GS-05|控制台保存到 GUI 加载|临时新增 `P930` 并保存 JSON，再用 GUI 路径加载|加载成功，GUI 窗口对象可创建；测试后已还原正式数据|
 |GS-06|超级账户公开搜索|搜索 `admin`、`coach`|公开玩家搜索返回 0 条，不暴露超级账户|
 |GS-07|带 BOM JSON 加载|构造临时带 UTF-8 BOM 的 JSON 文件|修复后可正常加载|
 |GS-08|GUI 登录状态|GUI 内执行玩家登录、登出、管理员登录和错误密码登录|登录状态正确更新，切换登录失败后回到未登录状态|
+|GS-09|GUI 编辑页登出回退|玩家登录进入“编辑信息”，再执行登出；管理员登录后错误密码切换|编辑页均回到未登录卡片，不残留旧账号编辑界面|
 
 ## 修复的问题
 
