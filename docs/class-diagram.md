@@ -92,7 +92,11 @@ classDiagram
     }
     class AuthenticationService
     class SearchService
-    class RankingService
+    class RankingService {
+        +topByComprehensiveScore(int) List~Player~
+        +playerComprehensiveScore(Player) double
+        +equipmentRanking() List~EquipmentScore~
+    }
     class RecommendationEngine
     class FileStorageService
     class DataInitializer

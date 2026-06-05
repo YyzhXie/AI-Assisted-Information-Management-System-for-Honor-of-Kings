@@ -118,6 +118,13 @@
 实现：`RankingService` 的胜率榜、等级榜和对战次数榜均已按该规则设置二级、三级和最终 ID 排序条件。  
 结论：通过。
 
+## OA-11 综合实力排名公式
+
+输入：运行 `java -cp out test.ComprehensiveRankingTest`。
+预期：玩家综合实力按 `100*(0.40*BayesianWinRate+0.25*LevelScore+0.25*MatchVolumeScore+0.10*HeroDiversityScore)` 计算；装备综合实力按 `100*(0.35*BayesianWinRate+0.25*PopularityScore+0.25*RatingScore+0.15*HeroCoverageScore)` 计算。
+实际：合成数据中 `P100` 玩家综合实力为 `84.1666666667`，`P101` 为 `78.3333333333`，`P100` 排名第一；`e100` 装备综合实力为 `77.5`，排名第一。
+结论：通过。
+
 ## 总结
 
-核心查询、统计、历史和排行榜输出均与数据集一致。唯一发现的问题是战队历史结果显示语言不统一，已将 `WIN/LOSE` 修复为中文“胜利/失败”，不影响数据计算。
+核心查询、统计、历史、综合实力和排行榜输出均与数据集一致。唯一发现的问题是战队历史结果显示语言不统一，已将 `WIN/LOSE` 修复为中文“胜利/失败”，不影响数据计算。

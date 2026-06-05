@@ -174,15 +174,22 @@ public class Main {
                 1. 按胜率
                 2. 按等级
                 3. 按对战次数
+                4. 按综合实力
                 """);
-        int choice = input.readInt("请选择: ", 1, 3);
+        int choice = input.readInt("请选择: ", 1, 4);
         switch (choice) {
             case 1 -> System.out.println(rankingService.formatPlayers(rankingService.topByWinRate(limit)));
             case 2 -> System.out.println(rankingService.formatPlayers(rankingService.topByLevel(limit)));
             case 3 -> System.out.println(rankingService.formatPlayers(rankingService.topByMatchCount(limit)));
+            case 4 -> System.out.println(rankingService.formatPlayers(rankingService.topByComprehensiveScore(limit)));
             default -> System.out.println("未知选择。");
         }
-        System.out.println("同位排序：除当前排序条件外，依次按等级、胜率、对战次数降序，再按ID升序。单局比赛没有平局。");
+        if (choice == 4) {
+            System.out.println("综合实力：100*(0.40*贝叶斯胜率+0.25*等级归一化+0.25*对战量归一化+0.10*英雄多样性)。");
+            System.out.println("综合实力同分时，依次按贝叶斯胜率、对战次数、等级、玩家ID排序。");
+        } else {
+            System.out.println("同位排序：除当前排序条件外，依次按等级、胜率、对战次数降序，再按ID升序。单局比赛没有平局。");
+        }
     }
 
     private void queryPlayer() {

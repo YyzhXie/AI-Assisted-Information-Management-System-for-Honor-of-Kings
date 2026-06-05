@@ -185,6 +185,8 @@ package "service" {
     + topByWinRate(limit: int): List<Player>
     + topByLevel(limit: int): List<Player>
     + topByMatchCount(limit: int): List<Player>
+    + topByComprehensiveScore(limit: int): List<Player>
+    + playerComprehensiveScore(player: Player): double
     + equipmentRanking(): List<EquipmentScore>
   }
 

@@ -46,10 +46,10 @@ java -cp out Main
 - 按玩家 ID、用户名或昵称关键字查询玩家；精确命中时直接显示详情，模糊命中时先显示候选列表
 - 按 ID 或名称查询战队概览
 - 按名称查询英雄详情
-- 装备统计和推荐装备
+- 装备统计和推荐装备，装备排名支持综合实力分
 - 玩家或战队最近 N 场对战历史
-- 按胜率、等级、对战次数显示排行榜
-- 排行榜同位时按等级、胜率、对战次数和玩家 ID 顺序稳定排序
+- 按胜率、等级、对战次数、综合实力显示排行榜
+- 排行榜同位时按等级、胜率、对战次数和玩家 ID 顺序稳定排序；综合实力同位时按贝叶斯胜率、对战次数、等级和玩家 ID 稳定排序
 - 管理员添加、编辑、删除管理员、玩家、英雄、装备、战队和对战记录
 - 玩家编辑自己的昵称和密码
 - JSON 保存和加载数据
@@ -80,7 +80,7 @@ java -cp out Main
 
 ## 8. 测试摘要
 
-测试文档位于 `docs/test-cases.md`，包含登录、查询、排行榜、数据管理、JSON 持久化、非法输入、连续登录稳定性和 Swing GUI 兼容性等场景。连续登录专项报告位于 `docs/login-stability-report.md`，交互鲁棒性报告位于 `docs/robustness-report.md`，长期运营外部更新说明位于 `docs/operations-update-guide.md`，输出准确性评测位于 `docs/output-accuracy-report.md`，GUI 加入后的稳定性回归报告位于 `docs/gui-stability-report.md`，派生数据一致性多轮测试报告位于 `docs/derived-data-consistency-report.md`。
+测试文档位于 `docs/test-cases.md`，包含登录、查询、排行榜、数据管理、JSON 持久化、非法输入、连续登录稳定性和 Swing GUI 兼容性等场景。综合实力公式说明位于 `docs/comprehensive-ranking-formulas.md`。连续登录专项报告位于 `docs/login-stability-report.md`，交互鲁棒性报告位于 `docs/robustness-report.md`，长期运营外部更新说明位于 `docs/operations-update-guide.md`，输出准确性评测位于 `docs/output-accuracy-report.md`，GUI 加入后的稳定性回归报告位于 `docs/gui-stability-report.md`，派生数据一致性多轮测试报告位于 `docs/derived-data-consistency-report.md`。
 
 GUI 兼容烟测命令：
 
@@ -88,6 +88,7 @@ GUI 兼容烟测命令：
 javac -encoding UTF-8 -d out src/Main.java src/GuiMain.java src/model/*.java src/service/*.java src/util/*.java src/gui/*.java src/test/*.java
 java -cp out test.GuiCompatibilitySmokeTest
 java -cp out test.DerivedDataConsistencyTest
+java -cp out test.ComprehensiveRankingTest
 ```
 
 ## 9. 已知限制

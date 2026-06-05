@@ -120,8 +120,8 @@ public class DerivedDataConsistencyTest {
                 .filter(item -> item.equipment().getId().equals("e900"))
                 .findFirst()
                 .orElseThrow();
-        assertEquals(1, score.usageCount(), "新增装备后装备使用英雄数量");
-        assertDouble(1002.5, score.score(), "新增装备后装备统计分数");
+        assertEquals(1, score.compatibleHeroCount(), "新增装备后适配英雄数量");
+        assertTrue(score.score() > 0.0 && score.score() <= 100.0, "新增装备后综合实力分数在0到100之间");
 
         assertTrue(manager.deleteEquipment("e900"), "删除临时装备成功");
         assertTrue(manager.findEquipmentById("e900").isEmpty(), "删除装备后无法按ID找到");
@@ -142,8 +142,8 @@ public class DerivedDataConsistencyTest {
                 .filter(item -> item.equipment().getId().equals("e901"))
                 .findFirst()
                 .orElseThrow();
-        assertEquals(2, score.usageCount(), "多英雄兼容装备使用数量");
-        assertDouble(107.0, score.score(), "多英雄兼容装备统计分数");
+        assertEquals(2, score.compatibleHeroCount(), "多英雄兼容装备适配英雄数量");
+        assertTrue(score.score() > 0.0 && score.score() <= 100.0, "多英雄兼容装备综合实力分数在0到100之间");
 
         assertTrue(manager.deleteEquipment("e901"), "删除多英雄兼容装备成功");
         for (Hero hero : heroes) {

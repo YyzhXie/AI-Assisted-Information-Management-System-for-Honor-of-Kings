@@ -93,10 +93,10 @@ public class VisualizationFrame extends JFrame {
     private final JList<Hero> heroList = new JList<>(heroListModel);
     private final JTextArea heroDetails = readOnlyArea();
 
-    private final JComboBox<String> rankingMode = new JComboBox<>(new String[]{"胜率", "等级", "对战次数"});
+    private final JComboBox<String> rankingMode = new JComboBox<>(new String[]{"综合实力", "胜率", "等级", "对战次数"});
     private final JSpinner rankingLimit = new JSpinner(new SpinnerNumberModel(10, 1, 20, 1));
     private final DefaultTableModel rankingTableModel = new DefaultTableModel(
-            new String[]{"名次", "玩家ID", "昵称", "等级", "胜率", "对战次数"}, 0) {
+            new String[]{"名次", "玩家ID", "昵称", "等级", "胜率", "对战次数", "综合实力"}, 0) {
         @Override
         public boolean isCellEditable(int row, int column) {
             return false;
@@ -292,8 +292,8 @@ public class VisualizationFrame extends JFrame {
         table.getTableHeader().setReorderingAllowed(false);
 
         JTextArea rule = readOnlyArea();
-        rule.setText("排序规则：单局比赛没有平局。排行榜按当前筛选条件排序；同位时依次按等级、胜率、对战次数降序，最后按玩家ID升序。");
-        rule.setRows(2);
+        rule.setText("综合实力=100*(0.40*贝叶斯胜率+0.25*等级归一化+0.25*对战量归一化+0.10*英雄多样性)。同分时按贝叶斯胜率、对战次数、等级、玩家ID排序。");
+        rule.setRows(3);
 
         JPanel panel = new JPanel(new BorderLayout(0, 10));
         panel.add(controls, BorderLayout.NORTH);
@@ -433,6 +433,7 @@ public class VisualizationFrame extends JFrame {
     private void refreshRanking() {
         int limit = (Integer) rankingLimit.getValue();
         List<Player> players = switch ((String) rankingMode.getSelectedItem()) {
+            case "综合实力" -> rankingService.topByComprehensiveScore(limit);
             case "等级" -> rankingService.topByLevel(limit);
             case "对战次数" -> rankingService.topByMatchCount(limit);
             default -> rankingService.topByWinRate(limit);
@@ -447,7 +448,8 @@ public class VisualizationFrame extends JFrame {
                     player.getDisplayName(),
                     player.getLevel(),
                     String.format("%.2f%%", player.getWinRate()),
-                    player.getTotalMatches()
+                    player.getTotalMatches(),
+                    String.format("%.2f", rankingService.playerComprehensiveScore(player))
             });
         }
     }
