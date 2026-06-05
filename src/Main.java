@@ -22,6 +22,7 @@ import java.util.Scanner;
 
 public class Main {
     private static final String DATA_FILE = "data/game-data.json";
+    private static final String LOGIN_FAILURE_MESSAGE = "登录失败，请检查用户名和密码。";
 
     private GameDataManager manager;
     private AuthenticationService authService;
@@ -74,7 +75,7 @@ public class Main {
         String password = input.readRequired("密码: ");
         Person user = authService.login(username, password);
         if (user == null) {
-            System.out.println("登录失败，请检查用户名和密码。");
+            System.out.println(LOGIN_FAILURE_MESSAGE);
             return;
         }
         System.out.println("登录成功，欢迎 " + user.getDisplayName());

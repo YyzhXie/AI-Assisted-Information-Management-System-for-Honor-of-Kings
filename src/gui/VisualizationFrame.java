@@ -59,6 +59,7 @@ public class VisualizationFrame extends JFrame {
     private static final String EDIT_LOGIN_CARD = "login";
     private static final String EDIT_PLAYER_CARD = "player";
     private static final String EDIT_ADMIN_CARD = "admin";
+    private static final String LOGIN_FAILURE_MESSAGE = "登录失败，请检查用户名和密码。";
 
     private final GameDataManager manager;
     private final AuthenticationService authService;
@@ -491,7 +492,7 @@ public class VisualizationFrame extends JFrame {
         Person user = authService.login(username.trim(), password);
         if (user == null) {
             if (showMessage) {
-                JOptionPane.showMessageDialog(this, "登录失败，请检查用户名和密码。", "登录失败", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, LOGIN_FAILURE_MESSAGE, "登录失败", JOptionPane.WARNING_MESSAGE);
             }
             updateLoginState();
             return false;

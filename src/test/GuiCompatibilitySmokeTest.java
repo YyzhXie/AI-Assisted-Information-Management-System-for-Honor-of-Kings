@@ -71,6 +71,8 @@ public class GuiCompatibilitySmokeTest {
                 throw new AssertionError("GUI 错误密码不应登录成功");
             }
             assertTextContains(frame.getLoginStatusText(), "未登录", "GUI 错误密码后回到未登录状态");
+            assertTextNotContains(frame.getLoginStatusText(), "管理员", "GUI 管理员失败登录不应暴露管理员状态");
+            assertTextNotContains(frame.getLoginStatusText(), "教练", "GUI 管理员失败登录不应暴露教练状态");
             assertEquals("login", frame.getCurrentEditCardForTest(), "GUI 错误密码后编辑页回到未登录状态");
             frame.dispose();
         });
@@ -142,6 +144,12 @@ public class GuiCompatibilitySmokeTest {
     private static void assertTextContains(String text, String expected, String message) {
         if (!text.contains(expected)) {
             throw new AssertionError(message + "，期望包含: " + expected + "，实际: " + text);
+        }
+    }
+
+    private static void assertTextNotContains(String text, String unexpected, String message) {
+        if (text.contains(unexpected)) {
+            throw new AssertionError(message + "，不应包含: " + unexpected + "，实际: " + text);
         }
     }
 }
