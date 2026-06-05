@@ -1,5 +1,8 @@
-* a0bdd14 (HEAD -> main) [GUI] 完善管理员表单校验和自动编号
-* 9d7b87b (origin/main) [Docs] 更新中文检索测试后的Git历史
+* c739222 (HEAD -> main) [GUI] 清理可视化窗口AI提示
+* 61120a1 [IDE] 添加VSCode Java项目配置
+* 95834e7 (origin/main) [Docs] 更新管理员表单校验后的Git历史
+* a0bdd14 [GUI] 完善管理员表单校验和自动编号
+* 9d7b87b [Docs] 更新中文检索测试后的Git历史
 * d80401f [Test] 验证中文重叠玩家候选检索
 * 4a99bde [Docs] 更新综合实力算法后的Git历史
 * 0c5f28c [AI-Implementation] 添加综合实力排名算法
