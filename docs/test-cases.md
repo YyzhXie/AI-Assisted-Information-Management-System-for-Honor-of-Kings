@@ -371,3 +371,12 @@ P001
 实际输出：输出 `Comprehensive ranking test passed.`
 结果：通过
 发现的 bug：无
+
+## TC41 中文姓名重叠候选检索
+
+功能：公开玩家中文模糊查询候选
+输入：在内存数据中新增中文姓名玩家 `阿离新星(P881)`，与现有玩家 `阿离同学(P001)` 共享中文片段；运行 `java -cp out test.ChineseSearchCandidateTest`，检索中文词条 `阿离`
+预期输出：候选结果同时包含 `阿离同学(P001)` 和 `阿离新星(P881)`；精确检索 `阿离新星` 只命中新增玩家
+实际输出：输出 `Chinese search candidate test passed.`，候选列表同时打印两个中文相关玩家
+结果：通过
+发现的 bug：使用 PowerShell here-string 直接向控制台脚本传中文时，终端输入编码可能把中文显示为 `????`，因此该自动测试使用 Java 字符串验证，避免被终端编码误导。

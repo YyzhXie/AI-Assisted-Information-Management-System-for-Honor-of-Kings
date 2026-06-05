@@ -36,6 +36,7 @@ public class GuiCompatibilitySmokeTest {
         addAndDeletePlayers(manager, searchService);
         assertEquals(15, manager.getPlayers().size(), "连续增删后玩家数量恢复");
         assertEquals("P001", rankingService.topByWinRate(1).get(0).getId(), "连续增删后排行榜稳定");
+        assertChineseNameConflictSearch(manager, searchService);
 
         AtomicReference<VisualizationFrame> frameRef = new AtomicReference<>();
         SwingUtilities.invokeAndWait(() -> {
@@ -120,6 +121,21 @@ public class GuiCompatibilitySmokeTest {
         }
     }
 
+    private static void assertChineseNameConflictSearch(GameDataManager manager, SearchService searchService) {
+        Player player = new Player("P881", "P881", "123456", "阿离新星", 20, 3, 1, "t004");
+        player.addHero("h003");
+        manager.addPlayer(player);
+        java.util.List<Player> candidates = searchService.search("阿离");
+        assertTrue(candidates.stream().anyMatch(item -> item.getId().equals("P001")), "中文重叠检索包含原有玩家 P001");
+        assertTrue(candidates.stream().anyMatch(item -> item.getId().equals("P881")), "中文重叠检索包含新增玩家 P881");
+        assertTrue(candidates.size() >= 2, "中文重叠检索返回多个候选");
+        assertEquals(1, searchService.searchExactPlayers("阿离新星").size(), "新增中文昵称精确检索唯一命中");
+        if (!manager.deletePlayer("P881")) {
+            throw new AssertionError("删除中文重叠测试玩家失败");
+        }
+        assertEquals(0, searchService.searchExactPlayers("阿离新星").size(), "删除后中文测试玩家不可精确搜索");
+    }
+
     private static JTabbedPane findTabbedPane(Container container) {
         for (Component component : container.getComponents()) {
             if (component instanceof JTabbedPane tabs) {
@@ -150,6 +166,12 @@ public class GuiCompatibilitySmokeTest {
     private static void assertTextNotContains(String text, String unexpected, String message) {
         if (text.contains(unexpected)) {
             throw new AssertionError(message + "，不应包含: " + unexpected + "，实际: " + text);
+        }
+    }
+
+    private static void assertTrue(boolean condition, String message) {
+        if (!condition) {
+            throw new AssertionError(message);
         }
     }
 }

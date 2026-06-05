@@ -89,6 +89,7 @@ javac -encoding UTF-8 -d out src/Main.java src/GuiMain.java src/model/*.java src
 java -cp out test.GuiCompatibilitySmokeTest
 java -cp out test.DerivedDataConsistencyTest
 java -cp out test.ComprehensiveRankingTest
+java -cp out test.ChineseSearchCandidateTest
 ```
 
 ## 9. 已知限制
