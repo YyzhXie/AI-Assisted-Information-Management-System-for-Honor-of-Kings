@@ -22,13 +22,13 @@ describe("Node.js visualization dashboard data", () => {
   });
 
   it("keeps the external operation equipment in Hou Yi recommendations", () => {
-    const houYi = dashboard.heroes.find((hero) => hero.id === "h003");
+    const houYi = dashboard.heroes.find((hero) => hero.id === "H003");
     assert.ok(houYi);
     assert.deepEqual(houYi.recommendedEquipment.map((item) => item.name), ["破军", "无尽战刃", "日渊"]);
   });
 
-  it("keeps empty team t004 stable for long-term operations", () => {
-    const emptyTeam = dashboard.teams.find((team) => team.id === "t004");
+  it("keeps empty team T004 stable for long-term operations", () => {
+    const emptyTeam = dashboard.teams.find((team) => team.id === "T004");
     assert.equal(emptyTeam.name, "云梦试训队");
     assert.equal(emptyTeam.memberCount, 0);
     assert.equal(emptyTeam.winRate, 0);

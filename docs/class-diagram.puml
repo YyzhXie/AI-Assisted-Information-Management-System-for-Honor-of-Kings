@@ -1,0 +1,270 @@
+@startuml
+title 王者荣耀 AI 辅助信息管理系统 - 类设计 UML
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+package "application" {
+  class Main {
+    - DATA_FILE: String
+    - manager: GameDataManager
+    - authService: AuthenticationService
+    - searchService: SearchService
+    - rankingService: RankingService
+    - recommendationEngine: RecommendationEngine
+    + main(args: String[]): void
+  }
+
+  class GuiMain {
+    - DATA_FILE: String
+    + main(args: String[]): void
+  }
+}
+
+package "gui" {
+  class VisualizationFrame {
+    - manager: GameDataManager
+    - authService: AuthenticationService
+    - searchService: SearchService
+    - rankingService: RankingService
+    + VisualizationFrame(manager: GameDataManager)
+    + loginUser(username: String, password: String): boolean
+    + logoutCurrentUser(): void
+  }
+}
+
+package "model" {
+  interface Reportable {
+    + generateReport(): String
+  }
+
+  abstract class Person {
+    - id: String
+    - username: String
+    - password: String
+    - displayName: String
+    - role: Role
+    + passwordMatches(password: String): boolean
+  }
+
+  class Admin {
+    + generateReport(): String
+  }
+
+  class Player {
+    - level: int
+    - wins: int
+    - losses: int
+    - teamId: String
+    - heroIds: List<String>
+    + getTotalMatches(): int
+    + getWinRate(): double
+    + generateReport(): String
+  }
+
+  class Hero {
+    - id: String
+    - name: String
+    - type: HeroType
+    - attack: int
+    - defense: int
+    - skillPower: int
+    - compatibleEquipmentIds: List<String>
+    + generateReport(): String
+  }
+
+  class Equipment {
+    - id: String
+    - name: String
+    - type: EquipmentType
+    - rating: double
+    - attributeDescription: String
+    + generateReport(): String
+  }
+
+  class Team {
+    - id: String
+    - name: String
+    - memberIds: List<String>
+    + generateReport(): String
+  }
+
+  class MatchRecord {
+    - id: String
+    - date: LocalDate
+    - teamAId: String
+    - teamBId: String
+    - winnerTeamId: String
+    - playerHeroChoices: Map<String, String>
+    + involvesPlayer(playerId: String): boolean
+    + involvesTeam(teamId: String): boolean
+    + opponentOf(teamId: String): String
+  }
+
+  enum Role {
+    ADMIN
+    PLAYER
+  }
+
+  enum HeroType {
+    TANK
+    WARRIOR
+    ASSASSIN
+    MAGE
+    MARKSMAN
+    SUPPORT
+  }
+
+  enum EquipmentType {
+    ATTACK
+    MAGIC
+    DEFENSE
+    MOVEMENT
+    JUNGLE
+    SUPPORT
+  }
+
+  enum MatchResult {
+    WIN
+    LOSE
+  }
+}
+
+package "service" {
+  interface Authenticatable {
+    + login(username: String, password: String): Person
+    + logout(): void
+    + getCurrentUser(): Person
+  }
+
+  interface Searchable<T> {
+    + search(keyword: String): List<T>
+  }
+
+  interface Persistable {
+    + save(manager: GameDataManager, filePath: String): void
+    + load(filePath: String): GameDataManager
+  }
+
+  class GameDataManager {
+    - players: Map<String, Player>
+    - admins: Map<String, Admin>
+    - heroes: Map<String, Hero>
+    - equipment: Map<String, Equipment>
+    - teams: Map<String, Team>
+    - matches: Map<String, MatchRecord>
+    + addPlayer(player: Player): void
+    + addAdmin(admin: Admin): void
+    + deleteAdmin(adminId: String): boolean
+    + findAdminById(id: String): Optional<Admin>
+    + findPlayerById(id: String): Optional<Player>
+    + getPlayers(): Collection<Player>
+    + matchesForPlayer(playerId: String): List<MatchRecord>
+    + matchesForTeam(teamId: String): List<MatchRecord>
+  }
+
+  class AuthenticationService {
+    - manager: GameDataManager
+    - currentUser: Person
+    + login(username: String, password: String): Person
+  }
+
+  class SearchService {
+    - manager: GameDataManager
+    - recommendationEngine: RecommendationEngine
+    + search(keyword: String): List<Player>
+    + searchExactPlayers(keyword: String): List<Player>
+    + searchTeams(keyword: String): List<Team>
+    + searchHeroes(keyword: String): List<Hero>
+    + playerDetails(player: Player): String
+    + teamOverview(team: Team): String
+    + heroDetails(hero: Hero): String
+  }
+
+  class RankingService {
+    - manager: GameDataManager
+    + topByWinRate(limit: int): List<Player>
+    + topByLevel(limit: int): List<Player>
+    + topByMatchCount(limit: int): List<Player>
+    + topByComprehensiveScore(limit: int): List<Player>
+    + playerComprehensiveScore(player: Player): double
+    + equipmentRanking(): List<EquipmentScore>
+  }
+
+  class RecommendationEngine {
+    - manager: GameDataManager
+    + recommendForHero(hero: Hero, limit: int): List<Equipment>
+  }
+
+  class FileStorageService {
+    + save(manager: GameDataManager, filePath: String): void
+    + load(filePath: String): GameDataManager
+  }
+}
+
+package "util" {
+  class DataInitializer {
+    + createDefaultData(): GameDataManager
+  }
+
+  class InputHelper {
+    - scanner: Scanner
+    + readRequired(prompt: String): String
+    + readInt(prompt: String, min: int, max: int): int
+    + readDate(prompt: String): LocalDate
+  }
+}
+
+Reportable <|.. Person
+Reportable <|.. Hero
+Reportable <|.. Equipment
+Reportable <|.. Team
+Person <|-- Admin
+Person <|-- Player
+
+Authenticatable <|.. AuthenticationService
+Searchable <|.. SearchService
+Persistable <|.. FileStorageService
+
+Main --> GameDataManager
+Main --> AuthenticationService
+Main --> SearchService
+Main --> RankingService
+Main --> RecommendationEngine
+Main --> FileStorageService
+Main --> InputHelper
+
+GuiMain --> VisualizationFrame
+GuiMain --> FileStorageService
+GuiMain --> DataInitializer
+VisualizationFrame --> GameDataManager
+VisualizationFrame --> AuthenticationService
+VisualizationFrame --> SearchService
+VisualizationFrame --> RankingService
+VisualizationFrame --> RecommendationEngine
+
+GameDataManager "1" o-- "*" Player
+GameDataManager "1" o-- "*" Admin
+GameDataManager "1" o-- "*" Hero
+GameDataManager "1" o-- "*" Equipment
+GameDataManager "1" o-- "*" Team
+GameDataManager "1" o-- "*" MatchRecord
+
+Player --> Role
+Player --> Hero : heroIds
+Player --> Team : teamId
+Admin --> Role
+Hero --> HeroType
+Hero --> Equipment : compatibleEquipmentIds
+Equipment --> EquipmentType
+Team --> Player : memberIds
+MatchRecord --> Team : teamA/teamB/winner
+MatchRecord --> Player : playerHeroChoices
+
+SearchService --> GameDataManager
+SearchService --> RecommendationEngine
+RankingService --> GameDataManager
+RecommendationEngine --> GameDataManager
+AuthenticationService --> GameDataManager
+FileStorageService --> GameDataManager
+DataInitializer --> GameDataManager
+@enduml
