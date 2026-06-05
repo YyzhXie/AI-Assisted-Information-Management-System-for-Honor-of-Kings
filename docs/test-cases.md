@@ -254,3 +254,30 @@ P001
 实际输出：`P001` 直接进入详情；`001` 显示候选“阿离同学(P001)”并可选择；`coach` 和 `a001` 均显示“未找到玩家。”
 结果：通过
 发现的 bug：原实现只对昵称做模糊匹配，ID 和用户名片段会误报未找到；已改为玩家 ID、用户名和昵称均支持模糊候选，超级账户不进入公开检索。
+
+## TC28 Swing GUI 编译和启动入口
+
+功能：Java 可视化入口
+输入：执行 `javac -encoding UTF-8 -d out src/Main.java src/GuiMain.java src/model/*.java src/service/*.java src/util/*.java src/gui/*.java`
+预期输出：控制台版本和 Swing GUI 版本均可编译
+实际输出：编译通过，无错误
+结果：通过
+发现的 bug：无
+
+## TC29 Swing GUI 功能覆盖检查
+
+功能：Swing GUI 可视化
+输入：执行 `java -cp out GuiMain`，在 GUI 中依次查看玩家查询、战队概览、英雄详情和排行榜页签
+预期输出：GUI 可以加载 `data/game-data.json`，并支持玩家查询、战队概览、英雄详情和排行榜四项可视化要求
+实际输出：Swing GUI 已实现四个页签；玩家、战队和英雄使用搜索框、候选列表和详情面板；排行榜使用表格并显示同位排序规则
+结果：通过
+发现的 bug：无
+
+## TC30 UML 文件检查
+
+功能：UML 设计说明
+输入：查看 `docs/class-diagram.puml`、`docs/class-diagram.md` 和 `IMPORTANT_GUI_AND_UML_NOTICE.md`
+预期输出：存在电子 UML 文件和醒目的作业可视化说明
+实际输出：PlantUML 与 Mermaid 两种类图文件均已创建，醒目说明文件明确 Swing GUI 是正式作业可视化、Node.js 可视化分支不是作业内容
+结果：通过
+发现的 bug：无

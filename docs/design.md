@@ -2,7 +2,7 @@
 
 ## 架构
 
-项目分为三层：模型层、服务层和控制台菜单层。模型层保存数据和简单报表，服务层处理业务逻辑，`Main` 负责菜单流程。
+项目分为四层：模型层、服务层、控制台菜单层和 Swing GUI 层。模型层保存数据和简单报表，服务层处理业务逻辑，`Main` 负责控制台菜单流程，`GuiMain` 和 `VisualizationFrame` 负责图形化查询与展示。
 
 ## 类关系说明
 
@@ -11,6 +11,7 @@
 - `Player` 关联多个英雄 ID，`Hero` 关联多个装备 ID，便于 JSON 保存。
 - `MatchRecord` 保存两支战队、胜者和玩家英雄选择，用于对战历史和英雄选用率。
 - 服务层统一接收 `GameDataManager`，避免 `Main` 直接维护多个集合。
+- `VisualizationFrame` 复用 `SearchService` 和 `RankingService`，不重新计算业务规则，保证 Swing GUI 与控制台输出一致。
 
 ## 接口设计说明
 
@@ -26,6 +27,16 @@
 ## 公开玩家搜索规则
 
 公开玩家搜索只匹配玩家 ID、用户名和昵称，不检索 `Admin` 集合。输入精确命中唯一玩家时直接进入对应操作；输入部分关键字时显示所有候选玩家，由用户选择后再查看详情或对战历史。`admin` 和 `coach` 等超级账户关键字会返回“未找到玩家”，避免外部用户枚举管理员或教练账号。
+
+## Swing GUI 设计
+
+`GuiMain` 是 Swing 可视化入口，启动时优先读取 `data/game-data.json`，失败时回退 `DataInitializer` 内置数据。`VisualizationFrame` 使用页签组织四项可视化功能：玩家查询、战队概览、英雄详情和排行榜。玩家、战队和英雄页签采用“搜索框 + 列表 + 详情面板”的结构；排行榜页签使用表格展示名次、玩家 ID、昵称、等级、胜率和对战次数。
+
+Swing GUI 属于正式 Java 作业内容。`Node.js-visualization` 分支仅作为额外实验，不作为作业提交内容。
+
+## UML 文件
+
+电子 UML 类图文件位于 `docs/class-diagram.puml` 和 `docs/class-diagram.md`。类图覆盖应用入口、Swing GUI、模型类、服务类、工具类、接口、枚举和主要依赖关系。
 
 ## 装备统计公式
 
