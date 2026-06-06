@@ -31,6 +31,8 @@ public class CombatSimulatorTest {
         assertTextContains(first.formatReport(), "装备触发率", "战报包含装备触发环境");
         assertTextContains(first.formatReport(), "暴击率", "战报包含暴击环境");
         assertTextContains(first.formatReport(), "闪避率", "战报包含闪避环境");
+        assertEquals(5, countLineupPlayers(first.teamALineup()), "标准战队队伍A上场5人");
+        assertEquals(5, countLineupPlayers(first.teamBLineup()), "标准战队队伍B上场5人");
 
         Player playerAfter = manager.findPlayerById("P001").orElseThrow();
         assertEquals(matchCountBefore, manager.getMatches().size(), "模拟不新增对战记录");
@@ -41,9 +43,28 @@ public class CombatSimulatorTest {
         assertThrows(() -> new CombatSimulator(manager, new Random(1L)).simulate("T001", "T001"),
                 "两支战队不能相同", "相同战队不能模拟");
         assertThrows(() -> new CombatSimulator(manager, new Random(1L)).simulate("T004", "T001"),
-                "没有成员", "空战队不能模拟");
+                "可参赛成员不足5人", "空战队不能模拟");
+        assertTeamWithFourPlayersRejected();
+        assertTeamWithSubstituteUsesFivePlayers();
 
         System.out.println("Combat simulator test passed.");
+    }
+
+    private static void assertTeamWithFourPlayersRejected() {
+        GameDataManager manager = loadData();
+        assertTrue(manager.deletePlayer("P005"), "构造四人战队时删除P005成功");
+        assertThrows(() -> new CombatSimulator(manager, new Random(2L)).simulate("T001", "T002"),
+                "可参赛成员不足5人", "四人战队不能模拟");
+    }
+
+    private static void assertTeamWithSubstituteUsesFivePlayers() {
+        GameDataManager manager = loadData();
+        Player substitute = new Player("P880", "P880", "123456", "模拟替补", 45, 8, 2, "T001");
+        substitute.replaceHeroIds(java.util.List.of("H003", "H015"));
+        manager.addPlayer(substitute);
+        CombatSimulationReport report = new CombatSimulator(manager, new Random(3L)).simulate("T001", "T002");
+        assertEquals(5, countLineupPlayers(report.teamALineup()), "六人战队随机选五人上场");
+        assertTextContains(report.formatReport(), "队伍A阵容", "替补战队报告包含阵容");
     }
 
     private static GameDataManager loadData() {
@@ -67,6 +88,13 @@ public class CombatSimulatorTest {
         if (!expected.equals(actual)) {
             throw new AssertionError(message + "，期望: " + expected + "，实际: " + actual);
         }
+    }
+
+    private static int countLineupPlayers(String lineup) {
+        if (lineup == null || lineup.isBlank()) {
+            return 0;
+        }
+        return (int) lineup.lines().filter(line -> line.startsWith("- ")).count();
     }
 
     private static void assertTextContains(String text, String expected, String message) {

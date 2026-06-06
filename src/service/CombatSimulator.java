@@ -6,6 +6,7 @@ import model.Player;
 import model.Team;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
@@ -14,6 +15,7 @@ import java.util.Random;
 public class CombatSimulator {
     private static final int INITIAL_HEALTH = 1000;
     private static final int ROUND_COUNT = 5;
+    private static final int LINEUP_SIZE = 5;
 
     private final GameDataManager manager;
     private final Random random;
@@ -76,20 +78,21 @@ public class CombatSimulator {
     }
 
     private TeamPlan buildTeamPlan(Team team) {
-        if (team.getMemberIds().isEmpty()) {
-            throw new IllegalArgumentException("战队 " + team.getId() + " 没有成员，不能模拟。");
-        }
-        List<FighterPlan> fighters = new ArrayList<>();
+        List<Player> availablePlayers = new ArrayList<>();
         for (String playerId : team.getMemberIds()) {
             Player player = manager.findPlayerById(playerId)
                     .orElseThrow(() -> new IllegalArgumentException("成员玩家不存在: " + playerId));
-            if (player.getHeroIds().isEmpty()) {
-                continue;
+            if (!player.getHeroIds().isEmpty()) {
+                availablePlayers.add(player);
             }
-            fighters.add(bestFighterPlan(player));
         }
-        if (fighters.isEmpty()) {
-            throw new IllegalArgumentException("战队 " + team.getId() + " 没有可用英雄，不能模拟。");
+        if (availablePlayers.size() < LINEUP_SIZE) {
+            throw new IllegalArgumentException("战队 " + team.getId() + " 可参赛成员不足5人，不能模拟。");
+        }
+        Collections.shuffle(availablePlayers, random);
+        List<FighterPlan> fighters = new ArrayList<>();
+        for (Player player : availablePlayers.stream().limit(LINEUP_SIZE).toList()) {
+            fighters.add(bestFighterPlan(player));
         }
         double basePower = fighters.stream().mapToDouble(FighterPlan::basePower).sum();
         double attackPower = fighters.stream().mapToDouble(FighterPlan::attackPower).sum();
