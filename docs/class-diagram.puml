@@ -11,6 +11,7 @@ package "application" {
     - searchService: SearchService
     - rankingService: RankingService
     - recommendationEngine: RecommendationEngine
+    - combatSimulator: CombatSimulator
     + main(args: String[]): void
   }
 
@@ -26,6 +27,7 @@ package "gui" {
     - authService: AuthenticationService
     - searchService: SearchService
     - rankingService: RankingService
+    - combatSimulator: CombatSimulator
     + VisualizationFrame(manager: GameDataManager)
     + loginUser(username: String, password: String): boolean
     + logoutCurrentUser(): void
@@ -195,6 +197,22 @@ package "service" {
     + recommendForHero(hero: Hero, limit: int): List<Equipment>
   }
 
+  class CombatSimulator {
+    - manager: GameDataManager
+    - random: Random
+    + simulate(teamAId: String, teamBId: String): CombatSimulationReport
+  }
+
+  class CombatSimulationReport {
+    + formatReport(): String
+  }
+
+  class CombatRoundReport {
+    + round(): int
+    + teamADamage(): int
+    + teamBDamage(): int
+  }
+
   class FileStorageService {
     + save(manager: GameDataManager, filePath: String): void
     + load(filePath: String): GameDataManager
@@ -230,6 +248,7 @@ Main --> AuthenticationService
 Main --> SearchService
 Main --> RankingService
 Main --> RecommendationEngine
+Main --> CombatSimulator
 Main --> FileStorageService
 Main --> InputHelper
 
@@ -241,6 +260,7 @@ VisualizationFrame --> AuthenticationService
 VisualizationFrame --> SearchService
 VisualizationFrame --> RankingService
 VisualizationFrame --> RecommendationEngine
+VisualizationFrame --> CombatSimulator
 
 GameDataManager "1" o-- "*" Player
 GameDataManager "1" o-- "*" Admin
@@ -264,6 +284,9 @@ SearchService --> GameDataManager
 SearchService --> RecommendationEngine
 RankingService --> GameDataManager
 RecommendationEngine --> GameDataManager
+CombatSimulator --> GameDataManager
+CombatSimulator --> CombatSimulationReport
+CombatSimulationReport o-- CombatRoundReport
 AuthenticationService --> GameDataManager
 FileStorageService --> GameDataManager
 DataInitializer --> GameDataManager

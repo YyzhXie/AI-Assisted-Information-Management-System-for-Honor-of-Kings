@@ -8,6 +8,7 @@ import model.Player;
 import model.Role;
 import model.Team;
 import service.AuthenticationService;
+import service.CombatSimulator;
 import service.FileStorageService;
 import service.GameDataManager;
 import service.RankingService;
@@ -29,6 +30,7 @@ public class Main {
     private SearchService searchService;
     private RankingService rankingService;
     private RecommendationEngine recommendationEngine;
+    private CombatSimulator combatSimulator;
     private final FileStorageService storageService = new FileStorageService();
     private final InputHelper input;
 
@@ -150,9 +152,10 @@ public class Main {
                     4. 装备统计
                     5. 玩家对战历史
                     6. 战队对战历史
+                    7. 对战模拟
                     0. 返回
                     """);
-            int choice = input.readInt("请选择: ", 0, 6);
+            int choice = input.readInt("请选择: ", 0, 7);
             switch (choice) {
                 case 1 -> queryPlayer();
                 case 2 -> queryTeam();
@@ -160,6 +163,7 @@ public class Main {
                 case 4 -> System.out.println(rankingService.formatEquipmentRanking());
                 case 5 -> queryPlayerHistory();
                 case 6 -> showTeamHistory(input.readRequired("战队ID: "));
+                case 7 -> simulateCombat();
                 case 0 -> {
                     return;
                 }
@@ -276,6 +280,16 @@ public class Main {
     private void showTeamHistory(String teamId) {
         int limit = input.readInt("最近N场: ", 1, 20);
         System.out.println(searchService.matchHistoryForTeam(teamId, limit));
+    }
+
+    private void simulateCombat() {
+        String teamAId = input.readRequired("队伍A ID: ");
+        String teamBId = input.readRequired("队伍B ID: ");
+        try {
+            System.out.println(combatSimulator.simulate(teamAId, teamBId).formatReport());
+        } catch (IllegalArgumentException ex) {
+            System.out.println("模拟失败: " + ex.getMessage());
+        }
     }
 
     private void dataManagementMenu() {
@@ -602,6 +616,7 @@ public class Main {
         recommendationEngine = new RecommendationEngine(manager);
         searchService = new SearchService(manager, recommendationEngine);
         rankingService = new RankingService(manager);
+        combatSimulator = new CombatSimulator(manager);
         authService = new AuthenticationService(manager);
     }
 }

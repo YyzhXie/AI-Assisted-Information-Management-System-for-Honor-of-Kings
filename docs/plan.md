@@ -2,11 +2,11 @@
 
 ## 1. 项目目标
 
-本项目实现一个纯 Java 控制台系统，用于管理王者荣耀风格的玩家、英雄、装备、战队和对战记录。系统用户包括管理员和玩家，管理员可以维护所有数据，玩家可以查看公开信息并修改自己的昵称。
+本项目实现一个纯 Java 系统，用于管理王者荣耀风格的玩家、英雄、装备、战队和对战记录。系统用户包括管理员和玩家，管理员可以维护所有数据，玩家可以查看公开信息并修改自己的昵称。项目同时提供控制台入口和 Swing GUI，并加入只预览不落库的对战模拟加分功能。
 
 ## 2. 需求分析
 
-系统需要实现玩家查询、战队概览、英雄详情、装备统计、对战历史、排行榜、数据管理、身份验证和文件持久化。控制台菜单负责交互，服务类负责业务逻辑，模型类负责保存数据。
+系统需要实现玩家查询、战队概览、英雄详情、装备统计、对战历史、对战模拟、排行榜、数据管理、身份验证和文件持久化。控制台菜单负责交互，服务类负责业务逻辑，模型类负责保存数据。
 
 ## 3. 使用的 Java 概念
 
@@ -14,7 +14,7 @@
 
 ## 4. 类设计
 
-核心模型类包括 `Person`、`Player`、`Admin`、`Hero`、`Equipment`、`Team`、`MatchRecord`。服务类包括 `GameDataManager`、`AuthenticationService`、`SearchService`、`RankingService`、`FileStorageService`、`RecommendationEngine`。工具类包括 `DataInitializer` 和 `InputHelper`。
+核心模型类包括 `Person`、`Player`、`Admin`、`Hero`、`Equipment`、`Team`、`MatchRecord`。服务类包括 `GameDataManager`、`AuthenticationService`、`SearchService`、`RankingService`、`FileStorageService`、`RecommendationEngine` 和 `CombatSimulator`。工具类包括 `DataInitializer` 和 `InputHelper`。
 
 ## 5. UML 草稿
 
@@ -30,6 +30,7 @@ GameDataManager --> Player/Hero/Equipment/Team/MatchRecord
 AuthenticationService --> GameDataManager
 SearchService --> GameDataManager
 RankingService --> GameDataManager
+CombatSimulator --> GameDataManager
 FileStorageService --> GameDataManager
 ```
 
@@ -51,7 +52,7 @@ FileStorageService --> GameDataManager
 
 ## 10. 测试计划
 
-测试覆盖登录、连续登录稳定性、查询、战队概览、英雄详情、装备统计、对战历史、排行榜、综合实力公式、管理员数据管理、玩家编辑、保存加载、非法输入和外部 JSON 长期运营更新。连续登录稳定性单独验证玩家到玩家、管理员到管理员、跨角色切换和失败登录。
+测试覆盖登录、连续登录稳定性、查询、战队概览、英雄详情、装备统计、对战历史、对战模拟、排行榜、综合实力公式、管理员数据管理、玩家编辑、保存加载、非法输入和外部 JSON 长期运营更新。连续登录稳定性单独验证玩家到玩家、管理员到管理员、跨角色切换和失败登录。
 
 ## 11. 风险分析
 

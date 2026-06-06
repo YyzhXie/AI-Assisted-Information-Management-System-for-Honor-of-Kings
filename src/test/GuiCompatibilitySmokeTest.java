@@ -55,12 +55,13 @@ public class GuiCompatibilitySmokeTest {
             if (tabs == null) {
                 throw new AssertionError("未找到 GUI 页签组件");
             }
-            assertEquals(5, tabs.getTabCount(), "GUI 页签数量");
+            assertEquals(6, tabs.getTabCount(), "GUI 页签数量");
             assertEquals("玩家查询", tabs.getTitleAt(0), "玩家查询页签");
             assertEquals("战队概览", tabs.getTitleAt(1), "战队概览页签");
             assertEquals("英雄详情", tabs.getTitleAt(2), "英雄详情页签");
             assertEquals("排行榜", tabs.getTitleAt(3), "排行榜页签");
-            assertEquals("编辑信息", tabs.getTitleAt(4), "编辑信息页签");
+            assertEquals("对战模拟", tabs.getTitleAt(4), "对战模拟页签");
+            assertEquals("编辑信息", tabs.getTitleAt(5), "编辑信息页签");
             assertTextContains(frame.getLoginStatusText(), "未登录", "GUI 初始登录状态");
             assertEquals("login", frame.getCurrentEditCardForTest(), "GUI 初始编辑页未登录状态");
             assertEquals("登录以查看信息。", frame.getEditPromptText(), "GUI 未登录编辑提示");

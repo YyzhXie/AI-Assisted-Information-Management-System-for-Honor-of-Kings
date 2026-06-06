@@ -12,6 +12,10 @@ classDiagram
         +loginUser(String, String) boolean
         +logoutCurrentUser() void
     }
+    class CombatSimulationReport {
+        +formatReport() String
+    }
+    class CombatRoundReport
 
     class Reportable {
         <<interface>>
@@ -98,6 +102,9 @@ classDiagram
         +equipmentRanking() List~EquipmentScore~
     }
     class RecommendationEngine
+    class CombatSimulator {
+        +simulate(String, String) CombatSimulationReport
+    }
     class FileStorageService
     class DataInitializer
     class InputHelper
@@ -118,6 +125,7 @@ classDiagram
     Main --> SearchService
     Main --> RankingService
     Main --> RecommendationEngine
+    Main --> CombatSimulator
     Main --> FileStorageService
     Main --> InputHelper
 
@@ -126,6 +134,7 @@ classDiagram
     VisualizationFrame --> AuthenticationService
     VisualizationFrame --> SearchService
     VisualizationFrame --> RankingService
+    VisualizationFrame --> CombatSimulator
 
     GameDataManager o-- Player
     GameDataManager o-- Admin
@@ -149,6 +158,9 @@ classDiagram
     SearchService --> RecommendationEngine
     RankingService --> GameDataManager
     RecommendationEngine --> GameDataManager
+    CombatSimulator --> GameDataManager
+    CombatSimulator --> CombatSimulationReport
+    CombatSimulationReport o-- CombatRoundReport
     AuthenticationService --> GameDataManager
     FileStorageService --> GameDataManager
     DataInitializer --> GameDataManager

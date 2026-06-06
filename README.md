@@ -2,7 +2,7 @@
 
 ## 1. 项目概述
 
-这是一个 Java 控制台课程作业项目，用于管理王者荣耀风格的数据：玩家、英雄、装备、战队和对战记录。系统支持登录、查询、排行榜、管理员数据管理、JSON 保存和加载，以及基于英雄类型的装备推荐。
+这是一个 Java 控制台课程作业项目，用于管理王者荣耀风格的数据：玩家、英雄、装备、战队和对战记录。系统支持登录、查询、排行榜、管理员数据管理、JSON 保存和加载、基于英雄类型的装备推荐，以及只预览不落库的对战模拟。
 
 ## 2. 如何运行
 
@@ -15,7 +15,7 @@ javac -encoding UTF-8 -d out src/Main.java src/GuiMain.java src/model/*.java src
 java -cp out GuiMain
 ```
 
-Swing GUI 属于正式作业可视化内容，支持登录/登出、我的信息、玩家查询、战队概览、英雄详情、排行榜和“编辑信息”页签。更多说明见 `IMPORTANT_GUI_AND_UML_NOTICE.md`。
+Swing GUI 属于正式作业可视化内容，支持登录/登出、我的信息、玩家查询、战队概览、英雄详情、排行榜、对战模拟和“编辑信息”页签。更多说明见 `IMPORTANT_GUI_AND_UML_NOTICE.md`。
 
 ### Java 控制台版本
 
@@ -48,6 +48,7 @@ java -cp out Main
 - 按名称查询英雄详情
 - 装备统计和推荐装备，装备排名支持综合实力分
 - 玩家或战队最近 N 场对战历史
+- 对战模拟：按现有战队、玩家、英雄和装备数据自动生成 5 回合战报，只预览不写入对战记录
 - 按胜率、等级、对战次数、综合实力显示排行榜
 - 排行榜同位时按等级、胜率、对战次数和玩家 ID 顺序稳定排序；综合实力同位时按贝叶斯胜率、对战次数、等级和玩家 ID 稳定排序
 - 管理员添加、编辑、删除管理员、玩家、英雄、装备、战队和对战记录
@@ -56,7 +57,7 @@ java -cp out Main
 - JSON 保存和加载数据
 - 启动时自动加载外部 JSON 数据，支持长期运营式追加战队和装备
 - 管理员和教练超级账户不进入公开玩家检索
-- Swing GUI 可视化：登录/登出、我的信息、玩家查询、战队概览、英雄详情、排行榜和登录后的编辑信息
+- Swing GUI 可视化：登录/登出、我的信息、玩家查询、战队概览、英雄详情、排行榜、对战模拟和登录后的编辑信息
 - Swing GUI 窗口展示名为“王者荣耀信息管理系统”，不显示 AI 相关提示语或 Swing 可视化提示文案
 
 ## 5. 使用的 Java 概念
@@ -68,6 +69,7 @@ java -cp out Main
 - 枚举：角色、英雄类型、装备类型、对战结果
 - 异常处理：处理输入错误、重复 ID、文件加载错误
 - 文件 I/O：使用 Java 标准库读写 JSON 文本
+- 对战模拟：使用服务类封装回合制伤害计算、随机环境和战报输出
 - GUI：使用 Java Swing 实现图形化查询、排行榜和按登录身份控制的编辑界面
 
 ## 6. UML 类图
@@ -92,6 +94,7 @@ java -cp out test.GuiCompatibilitySmokeTest
 java -cp out test.DerivedDataConsistencyTest
 java -cp out test.ComprehensiveRankingTest
 java -cp out test.ChineseSearchCandidateTest
+java -cp out test.CombatSimulatorTest
 ```
 
 ## 9. 已知限制

@@ -24,7 +24,7 @@
 |GS-01|完整编译|编译 `Main`、`GuiMain`、模型、服务、工具、GUI 和测试类|通过|
 |GS-02|连续登录退出|`admin` -> `coach` -> `P001` -> `P012` -> 错误密码|菜单权限切换正常，失败登录不复用旧用户|
 |GS-03|连续添加/删除玩家|管理员连续添加 `P901`、`P902`，再连续删除|添加和删除均成功，删除后公开查询显示未找到|
-|GS-04|GUI 兼容烟测|运行 `java -cp out test.GuiCompatibilitySmokeTest`|通过，GUI 五个页签存在，排行榜、综合实力列和公开搜索稳定|
+|GS-04|GUI 兼容烟测|运行 `java -cp out test.GuiCompatibilitySmokeTest`|通过，GUI 六个页签存在，排行榜、综合实力列、对战模拟页签和公开搜索稳定|
 |GS-05|控制台保存到 GUI 加载|临时新增 `P930` 并保存 JSON，再用 GUI 路径加载|加载成功，GUI 窗口对象可创建；测试后已还原正式数据|
 |GS-06|超级账户公开搜索|搜索 `admin`、`coach`|公开玩家搜索返回 0 条，不暴露超级账户|
 |GS-07|带 BOM JSON 加载|构造临时带 UTF-8 BOM 的 JSON 文件|修复后可正常加载|

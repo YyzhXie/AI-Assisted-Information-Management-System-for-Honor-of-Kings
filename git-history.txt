@@ -1,21 +1,24 @@
-* c739222 (HEAD -> main) [GUI] 清理可视化窗口AI提示
-* 61120a1 [IDE] 添加VSCode Java项目配置
-* 95834e7 (origin/main) [Docs] 更新管理员表单校验后的Git历史
-* a0bdd14 [GUI] 完善管理员表单校验和自动编号
-* 9d7b87b [Docs] 更新中文检索测试后的Git历史
-* d80401f [Test] 验证中文重叠玩家候选检索
-* 4a99bde [Docs] 更新综合实力算法后的Git历史
-* 0c5f28c [AI-Implementation] 添加综合实力排名算法
-* 71ae922 [Docs] 更新Git历史证据
-* fcf896e [Test] 补充派生数据一致性评测
-* 1d2588e [Security] 隐藏管理员失败登录身份
-* 535d021 [GUI] 添加编辑信息页签
-* 5874d91 [GUI] 补充Swing登录功能
-* 6e93a5e [Test] 回归验证Swing GUI稳定性
-* a65b613 [GUI] 添加Swing可视化和UML类图
-| * 74fed96 (origin/Node.js-visualization, Node.js-visualization) [Docs] 标注Node可视化分支非作业内容
-| * d038895 [Visualization] 添加Node.js可视化仪表盘
-|/  
+*   fc07dbd (origin/Node.js-visualization, Node.js-visualization) [Merge] 同步main更新到Node可视化分支
+|\
+| * f338a11 (HEAD -> main, origin/main) [Docs] 更新可视化文案后的Git历史
+| * c739222 [GUI] 清理可视化窗口AI提示
+| * 61120a1 [IDE] 添加VSCode Java项目配置
+| * 95834e7 [Docs] 更新管理员表单校验后的Git历史
+| * a0bdd14 [GUI] 完善管理员表单校验和自动编号
+| * 9d7b87b [Docs] 更新中文检索测试后的Git历史
+| * d80401f [Test] 验证中文重叠玩家候选检索
+| * 4a99bde [Docs] 更新综合实力算法后的Git历史
+| * 0c5f28c [AI-Implementation] 添加综合实力排名算法
+| * 71ae922 [Docs] 更新Git历史证据
+| * fcf896e [Test] 补充派生数据一致性评测
+| * 1d2588e [Security] 隐藏管理员失败登录身份
+| * 535d021 [GUI] 添加编辑信息页签
+| * 5874d91 [GUI] 补充Swing登录功能
+| * 6e93a5e [Test] 回归验证Swing GUI稳定性
+| * a65b613 [GUI] 添加Swing可视化和UML类图
+* | 74fed96 [Docs] 标注Node可视化分支非作业内容
+* | d038895 [Visualization] 添加Node.js可视化仪表盘
+|/
 * 83e3bde [Human-Decision] 修复公开查询候选并记录人工决策
 * 96d604a [Docs] 更新排行榜规则调整后的Git历史
 * c15b1b7 [Docs] 补充排行榜规则调整AI证据

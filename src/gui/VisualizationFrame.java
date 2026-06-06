@@ -11,6 +11,7 @@ import model.Player;
 import model.Role;
 import model.Team;
 import service.AuthenticationService;
+import service.CombatSimulator;
 import service.FileStorageService;
 import service.GameDataManager;
 import service.RankingService;
@@ -67,6 +68,7 @@ public class VisualizationFrame extends JFrame {
     private final AuthenticationService authService;
     private final SearchService searchService;
     private final RankingService rankingService;
+    private final CombatSimulator combatSimulator;
     private final JLabel loginStatus = new JLabel("未登录：可使用公开可视化");
     private final JButton loginButton = new JButton("登录");
     private final JButton logoutButton = new JButton("登出");
@@ -104,6 +106,9 @@ public class VisualizationFrame extends JFrame {
             return false;
         }
     };
+    private final JComboBox<Team> simulationTeamA = new JComboBox<>();
+    private final JComboBox<Team> simulationTeamB = new JComboBox<>();
+    private final JTextArea simulationReport = readOnlyArea();
 
     public VisualizationFrame(GameDataManager manager) {
         super("王者荣耀信息管理系统");
@@ -112,6 +117,7 @@ public class VisualizationFrame extends JFrame {
         RecommendationEngine recommendationEngine = new RecommendationEngine(manager);
         this.searchService = new SearchService(manager, recommendationEngine);
         this.rankingService = new RankingService(manager);
+        this.combatSimulator = new CombatSimulator(manager);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(980, 680));
@@ -132,6 +138,7 @@ public class VisualizationFrame extends JFrame {
         tabs.addTab("战队概览", createTeamPanel());
         tabs.addTab("英雄详情", createHeroPanel());
         tabs.addTab("排行榜", createRankingPanel());
+        tabs.addTab("对战模拟", createSimulationPanel());
         tabs.addTab("编辑信息", createEditPanel());
         root.add(tabs, BorderLayout.CENTER);
         return root;
@@ -298,6 +305,48 @@ public class VisualizationFrame extends JFrame {
         panel.add(controls, BorderLayout.NORTH);
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
         panel.add(rule, BorderLayout.SOUTH);
+        return panel;
+    }
+
+    private JPanel createSimulationPanel() {
+        JButton simulateButton = new JButton("开始模拟");
+        simulateButton.addActionListener(event -> runCombatSimulation());
+
+        DefaultListCellRenderer renderer = new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index,
+                                                          boolean isSelected, boolean cellHasFocus) {
+                JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof Team team) {
+                    label.setText(team.getName() + " (" + team.getId() + ")");
+                }
+                return label;
+            }
+        };
+        simulationTeamA.setRenderer(renderer);
+        simulationTeamB.setRenderer(renderer);
+
+        JPanel controls = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(4, 4, 4, 4);
+        c.anchor = GridBagConstraints.WEST;
+        controls.add(new JLabel("队伍A:"), c);
+        c.gridx = 1;
+        controls.add(simulationTeamA, c);
+        c.gridx = 2;
+        controls.add(new JLabel("队伍B:"), c);
+        c.gridx = 3;
+        controls.add(simulationTeamB, c);
+        c.gridx = 4;
+        c.weightx = 1;
+        controls.add(simulateButton, c);
+
+        simulationReport.setRows(18);
+        simulationReport.setText("选择两支战队后开始模拟。模拟只生成预览报告，不写入对战记录，不影响排行榜和历史数据。");
+        JPanel panel = new JPanel(new BorderLayout(0, 10));
+        panel.add(controls, BorderLayout.NORTH);
+        panel.add(new JScrollPane(simulationReport), BorderLayout.CENTER);
+        refreshSimulationTeams();
         return panel;
     }
 
@@ -936,6 +985,51 @@ public class VisualizationFrame extends JFrame {
         showAllTeams();
         showAllHeroes();
         refreshRanking();
+        refreshSimulationTeams();
+    }
+
+    private void refreshSimulationTeams() {
+        Team selectedA = (Team) simulationTeamA.getSelectedItem();
+        Team selectedB = (Team) simulationTeamB.getSelectedItem();
+        simulationTeamA.removeAllItems();
+        simulationTeamB.removeAllItems();
+        for (Team team : manager.getTeams()) {
+            simulationTeamA.addItem(team);
+            simulationTeamB.addItem(team);
+        }
+        restoreTeamSelection(simulationTeamA, selectedA);
+        restoreTeamSelection(simulationTeamB, selectedB);
+        if (simulationTeamB.getItemCount() > 1 && simulationTeamA.getSelectedIndex() == simulationTeamB.getSelectedIndex()) {
+            simulationTeamB.setSelectedIndex(1);
+        }
+    }
+
+    private void restoreTeamSelection(JComboBox<Team> comboBox, Team selected) {
+        if (selected == null) {
+            return;
+        }
+        for (int i = 0; i < comboBox.getItemCount(); i++) {
+            if (comboBox.getItemAt(i).getId().equals(selected.getId())) {
+                comboBox.setSelectedIndex(i);
+                return;
+            }
+        }
+    }
+
+    private void runCombatSimulation() {
+        Team teamA = (Team) simulationTeamA.getSelectedItem();
+        Team teamB = (Team) simulationTeamB.getSelectedItem();
+        if (teamA == null || teamB == null) {
+            simulationReport.setText("模拟失败: 请先选择两支战队。");
+            return;
+        }
+        try {
+            simulationReport.setText(combatSimulator.simulate(teamA.getId(), teamB.getId()).formatReport());
+            simulationReport.setCaretPosition(0);
+        } catch (IllegalArgumentException ex) {
+            simulationReport.setText("模拟失败: " + ex.getMessage());
+            simulationReport.setCaretPosition(0);
+        }
     }
 
     private String adminListText(Object item) {
